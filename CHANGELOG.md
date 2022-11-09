@@ -4,7 +4,7 @@
 
 ### Minor Changes
 
-- [`df53fd6`](https://github.com/Sqrrl/wc-datepicker/commit/df53fd6e213d6e462635c9eef1b5f9a3f04457a8) Thanks [@Sqrrl](https://github.com/Sqrrl)! - Add changeMonth event
+- [`df53fd6`](https://github.com/Sqrrl/wc-datepicker/commit/df53fd6e213d6e462635c9eef1b5f9a3f04457a8) Thanks [@alexander-merz](https://github.com/alexander-merz)! - Add changeMonth event
 
 ## 0.2.0
 
