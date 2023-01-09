@@ -24,7 +24,7 @@
   margin-left: 0.25rem;
   padding: 0;
   border: none;
-  color: #0000ff;
+  color: var(--b-link);
   background-color: transparent;
   cursor: pointer;
 }
