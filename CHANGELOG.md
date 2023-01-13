@@ -1,5 +1,11 @@
 # wc-datepicker
 
+## 0.5.0
+
+### Minor Changes
+
+- [`a318e39`](https://github.com/Sqrrl/wc-datepicker/commit/a318e39b6bd824f8cc5dc57e056dd38307ae778c) Thanks [@Sqrrl](https://github.com/Sqrrl)! - Add classes to mark start and end dates of a range selection
+
 ## 0.4.0
 
 ### Minor Changes
