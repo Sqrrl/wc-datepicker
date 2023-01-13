@@ -574,6 +574,19 @@ export class WCDatepicker {
                                 this.currentDate
                             });
 
+                        const orderedValues = Boolean(this.value?.[0])
+                          ? [
+                              this.value?.[0],
+                              this.value?.[1] || this.hoveredDate
+                            ].sort((a, b) => a - b)
+                          : [];
+
+                        const isStart =
+                          this.range && isSameDay(orderedValues[0], day);
+
+                        const isEnd =
+                          this.range && isSameDay(orderedValues[1], day);
+
                         const isToday = isSameDay(day, new Date());
 
                         const isDisabled = this.disableDate(day);
@@ -588,7 +601,9 @@ export class WCDatepicker {
                             isOverflowing,
                           [this.getClassName('date--today')]: isToday,
                           [this.getClassName('date--selected')]: isSelected,
-                          [this.getClassName('date--in-range')]: isInRange
+                          [this.getClassName('date--in-range')]: isInRange,
+                          [this.getClassName('date--start')]: isStart,
+                          [this.getClassName('date--end')]: isEnd
                         };
 
                         const Tag = isSelected
