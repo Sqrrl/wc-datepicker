@@ -18,44 +18,8 @@
     <link rel="shortcut icon" type="image/x-icon" href="favicon.ico" />
     <link rel="stylesheet" href="css/bamboo.css" />
     <link rel="stylesheet" href="css/main.css" />
-    <link rel="stylesheet" href="css/prism.css" id="prism"/>
+    <link rel="stylesheet" href="css/prism.css" id="prism" />
     <link rel="stylesheet" href="themes/light.css" id="theme" />
-    <script>
-      function setTheme(theme) {
-        const stylesheet = document.getElementById("theme");
-        const prismCSS = document.getElementById("prism")
-        const themeLabel = document.getElementById("current-theme-label");
-        if (theme === "dark") {
-          localStorage.setItem('theme', "dark");
-          document.querySelector("html").classList.add("dark");
-          stylesheet.setAttribute("href", "themes/dark.css");
-          prismCSS.setAttribute("href", "css/prism-dark.css")
-          if (themeLabel) themeLabel.innerHTML = "dark.css";
-        }
-        if (theme === "light"){
-          localStorage.setItem('theme', "light");
-          document.querySelector("html").classList.remove("dark");
-          stylesheet.setAttribute("href", "themes/light.css");
-          prismCSS.setAttribute("href", "css/prism.css")
-          if (themeLabel) themeLabel.innerHTML = "light.css";
-        }
-      }
-      if (localStorage.getItem('theme'))
-        setTheme(localStorage.getItem('theme'))
-      else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-        setTheme("dark")
-        // Wait a little for theme label to have rendered
-        setTimeout(()=> {
-          const themeLabel = document.getElementById("current-theme-label");
-          if (themeLabel) themeLabel.innerHTML = "dark.css";
-        }, 100)
-
-      }
-      else {
-        setTheme("light")
-      }
-
-    </script>
 
     <script type="module" src="dist/esm/wc-datepicker.js"></script>
   </head>
@@ -850,13 +814,53 @@ defineCustomElements();</code></pre>
         window.Prism.highlightAll();
       }
 
-      function toggleTheme() {
-        const stylesheet = document.getElementById("theme");
+      function setTheme(theme) {
+        const stylesheet = document.getElementById('theme');
+        const prismCSS = document.getElementById('prism');
+        const themeLabel = document.getElementById('current-theme-label');
 
-        if (stylesheet.getAttribute("href").includes("light.css")) {
-          setTheme("dark")
+        if (theme === 'dark') {
+          localStorage.setItem('theme', 'dark');
+          document.querySelector('html').classList.add('dark');
+          stylesheet.setAttribute('href', 'themes/dark.css');
+          prismCSS.setAttribute('href', 'css/prism-dark.css');
+
+          if (themeLabel) {
+            themeLabel.innerHTML = 'dark.css';
+          }
+        } else if (theme === 'light') {
+          localStorage.setItem('theme', 'light');
+          document.querySelector('html').classList.remove('dark');
+          stylesheet.setAttribute('href', 'themes/light.css');
+          prismCSS.setAttribute('href', 'css/prism.css');
+
+          if (themeLabel) {
+            themeLabel.innerHTML = 'light.css';
+          }
+        }
+      }
+
+      if (localStorage.getItem('theme'))
+        setTheme(localStorage.getItem('theme'));
+      else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        setTheme('dark');
+
+        const themeLabel = document.getElementById('current-theme-label');
+
+        if (themeLabel) {
+          themeLabel.innerHTML = 'dark.css';
+        }
+      } else {
+        setTheme('light');
+      }
+
+      function toggleTheme() {
+        const stylesheet = document.getElementById('theme');
+
+        if (stylesheet.getAttribute('href').includes('light.css')) {
+          setTheme('dark');
         } else {
-          setTheme("light")
+          setTheme('light');
         }
       }
 
