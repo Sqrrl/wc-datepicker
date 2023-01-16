@@ -114,11 +114,6 @@ h6 {
 
 a {
   color: var(--b-link);
-  text-decoration: none;
-}
-
-a:hover {
-  text-decoration: underline;
 }
 
 hr {
