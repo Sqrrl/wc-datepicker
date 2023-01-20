@@ -27,6 +27,7 @@ import {
   getYear,
   isDateInRange,
   isSameDay,
+  removeTimezoneOffset,
   subDays
 } from '../../utils/utils';
 
@@ -123,7 +124,9 @@ export class WCDatepicker {
 
   @Watch('startDate')
   watchStartDate() {
-    this.currentDate = this.startDate ? new Date(this.startDate) : new Date();
+    this.currentDate = this.startDate
+      ? removeTimezoneOffset(new Date(this.startDate))
+      : new Date();
   }
 
   @Watch('value')
@@ -145,7 +148,9 @@ export class WCDatepicker {
   }
 
   private init = () => {
-    this.currentDate = this.startDate ? new Date(this.startDate) : new Date();
+    this.currentDate = this.startDate
+      ? removeTimezoneOffset(new Date(this.startDate))
+      : new Date();
     this.updateWeekdays();
   };
 
@@ -297,7 +302,7 @@ export class WCDatepicker {
       return;
     }
 
-    const date = new Date(target.dataset.date);
+    const date = removeTimezoneOffset(new Date(target.dataset.date));
 
     this.updateCurrentDate(date);
     this.onSelectDate(date);
@@ -371,8 +376,8 @@ export class WCDatepicker {
       return;
     }
 
-    const date = new Date(
-      (event.target as HTMLElement).closest('td').dataset.date
+    const date = removeTimezoneOffset(
+      new Date((event.target as HTMLElement).closest('td').dataset.date)
     );
 
     this.hoveredDate = date;

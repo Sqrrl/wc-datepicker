@@ -57,15 +57,18 @@ export function getDaysOfMonth(
 }
 
 export function getFirstOfMonth(date: Date): Date {
-  return new Date(
-    `${getYear(date)}-${String(getMonth(date)).padStart(2, '0')}-01`
+  const firstOfMonth = removeTimezoneOffset(
+    new Date(`${getYear(date)}-${String(getMonth(date)).padStart(2, '0')}-01`)
   );
+
+  return firstOfMonth;
 }
 
 export function getISODateString(date: Date): string {
   if (!(date instanceof Date)) {
     return;
   }
+
   return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(
     2,
     '0'
@@ -87,7 +90,9 @@ export function getMonth(date: Date): number {
 
 export function getMonths(locale?: string): string[] {
   return new Array(12).fill(undefined).map((_, month) => {
-    const date = new Date(`2006-${String(month + 1).padStart(2, '0')}-01`);
+    const date = removeTimezoneOffset(
+      new Date(`2006-${String(month + 1).padStart(2, '0')}-01`)
+    );
 
     return Intl.DateTimeFormat(locale, {
       month: 'long'
@@ -143,7 +148,7 @@ export function getWeekDays(
     .fill(undefined)
     .map((_, index) => ((firstDayOfWeek + index) % 7) + 1)
     .map((day) => {
-      const date = new Date(`2006-01-0${day}`);
+      const date = removeTimezoneOffset(new Date(`2006-01-0${day}`));
 
       return [
         Intl.DateTimeFormat(locale, {
@@ -181,6 +186,14 @@ export function isSameDay(date1?: Date, date2?: Date) {
     date1.getMonth() === date2.getMonth() &&
     date1.getDate() === date2.getDate()
   );
+}
+
+export function removeTimezoneOffset(date: Date): Date {
+  const newDate = new Date(date);
+
+  newDate.setMinutes(newDate.getMinutes() + newDate.getTimezoneOffset());
+
+  return newDate;
 }
 
 export function subDays(date: Date, days: number): Date {
