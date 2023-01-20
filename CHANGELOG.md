@@ -1,5 +1,11 @@
 # wc-datepicker
 
+## 0.5.1
+
+### Patch Changes
+
+- [`bb577fe`](https://github.com/Sqrrl/wc-datepicker/commit/bb577fe3adbefc9358115cd6446b4eb405e11110) Thanks [@Sqrrl](https://github.com/Sqrrl)! - Fix timezone adjustments
+
 ## 0.5.0
 
 ### Minor Changes
