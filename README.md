@@ -1,5 +1,5 @@
 <div align="center">
-  <h1>WC Datepicker</h1>
+  <h1>wc-datepicker</h1>
   
   <p><strong>A small, accessible and customizable datepicker written in TypeScript.</strong></p>
   
