@@ -1,5 +1,11 @@
 # wc-datepicker
 
+## 0.5.2
+
+### Patch Changes
+
+- [`c157337`](https://github.com/Sqrrl/wc-datepicker/commit/c157337123c9082b2af1cb77c7b37f8190f4a3d2) Thanks [@Sqrrl](https://github.com/Sqrrl)! - Prevent input of years <0 or >9999 (fixes #13)
+
 ## 0.5.1
 
 ### Patch Changes
