@@ -208,6 +208,10 @@ export class WCDatepicker {
     const month = date.getMonth();
     const year = date.getFullYear();
 
+    if (year > 9999 || year < 0) {
+      return;
+    }
+
     const monthChanged =
       month !== this.currentDate.getMonth() ||
       year !== this.currentDate.getFullYear();
@@ -318,7 +322,20 @@ export class WCDatepicker {
   };
 
   private onYearSelect = (event: Event) => {
-    const year = +(event.target as HTMLSelectElement).value;
+    let year = +(event.target as HTMLSelectElement).value;
+    const input = event.target as HTMLInputElement;
+
+    if (isNaN(year)) {
+      year = new Date().getFullYear();
+      input.value = String(year);
+    } else if (year < 0) {
+      year = 0;
+      input.value = String(year);
+    } else if (year > 9999) {
+      year = 9999;
+      input.value = String(year);
+    }
+
     const date = new Date(this.currentDate);
 
     date.setFullYear(year);
@@ -475,6 +492,7 @@ export class WCDatepicker {
                 class={this.getClassName('year-select')}
                 disabled={this.disabled}
                 max={9999}
+                maxLength={4}
                 min={1}
                 name="year"
                 onChange={this.onYearSelect}

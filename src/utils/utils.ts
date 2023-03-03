@@ -58,7 +58,11 @@ export function getDaysOfMonth(
 
 export function getFirstOfMonth(date: Date): Date {
   const firstOfMonth = removeTimezoneOffset(
-    new Date(`${getYear(date)}-${String(getMonth(date)).padStart(2, '0')}-01`)
+    new Date(
+      `${String(getYear(date)).padStart(4, '0')}-${String(
+        getMonth(date)
+      ).padStart(2, '0')}-01`
+    )
   );
 
   return firstOfMonth;

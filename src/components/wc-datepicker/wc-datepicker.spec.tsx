@@ -482,4 +482,30 @@ describe('wc-datepicker', () => {
 
     expect(spy).not.toHaveBeenCalled();
   });
+
+  it('resets invalid years', async () => {
+    const page = await newSpecPage({
+      components: [WCDatepicker],
+      html: `<wc-datepicker></wc-datepicker>`,
+      language: 'en'
+    });
+
+    const yearSelect = page.root.querySelector<HTMLInputElement>(
+      '.wc-datepicker__year-select'
+    );
+
+    yearSelect.value = '100000';
+    yearSelect.dispatchEvent(new Event('change'));
+
+    await page.waitForChanges();
+
+    expect(yearSelect.value).toBe('9999');
+
+    yearSelect.value = '-1';
+    yearSelect.dispatchEvent(new Event('change'));
+
+    await page.waitForChanges();
+
+    expect(yearSelect.value).toBe('0');
+  });
 });
