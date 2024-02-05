@@ -1,5 +1,11 @@
 # wc-datepicker
 
+## 0.5.3
+
+### Patch Changes
+
+- [`e21bea2`](https://github.com/Sqrrl/wc-datepicker/commit/e21bea26065bf1f07659b8bcc03b630c45388f46) Thanks [@Sqrrl](https://github.com/Sqrrl)! - Fix an issue causing months to be skipped when navigating
+
 ## 0.5.2
 
 ### Patch Changes
