@@ -105,7 +105,7 @@ describe('format', () => {
     );
 
     expect(getNextMonth(new Date('2022-12-20'))).toEqual(
-      new Date('2023-01-20')
+      new Date('2023-01-01')
     );
   });
 
@@ -130,7 +130,7 @@ describe('format', () => {
     );
 
     expect(getPreviousMonth(new Date('2022-12-20'))).toEqual(
-      new Date('2022-11-20')
+      new Date('2022-11-01')
     );
   });
 

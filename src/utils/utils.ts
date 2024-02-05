@@ -111,6 +111,7 @@ export function getNextDay(date: Date): Date {
 export function getNextMonth(date: Date): Date {
   const newDate = new Date(date);
 
+  newDate.setDate(1);
   newDate.setMonth(newDate.getMonth() + 1);
 
   return newDate;
@@ -131,6 +132,7 @@ export function getPreviousDay(date: Date): Date {
 export function getPreviousMonth(date: Date): Date {
   const newDate = new Date(date);
 
+  newDate.setDate(1);
   newDate.setMonth(newDate.getMonth() - 1);
 
   return newDate;
