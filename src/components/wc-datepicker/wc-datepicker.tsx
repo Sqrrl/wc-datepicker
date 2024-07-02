@@ -88,6 +88,7 @@ export class WCDatepicker {
   @Prop() startDate?: string = getISODateString(new Date());
   @Prop() todayButtonContent?: string;
   @Prop({ mutable: true }) value?: Date | Date[];
+  @Prop() maxSearchDays?: number = 365;
 
   @State() currentDate: Date;
   @State() hoveredDate: Date;
@@ -268,6 +269,107 @@ export class WCDatepicker {
     return this.range;
   }
 
+  private getAvailableDate = (
+    date: Date,
+    direction:
+      | 'previousDay'
+      | 'nextDay'
+      | 'previousSameWeekDay'
+      | 'nextSameWeekDay'
+      | 'firstOfMonth'
+      | 'lastOfMonth'
+      | 'previousMonth'
+      | 'nextMonth'
+      | 'previousYear'
+      | 'nextYear'
+  ) => {
+    let potentialDate;
+    let outOfRange = false;
+
+    switch (direction) {
+      case 'previousDay':
+        potentialDate = getPreviousDay(date);
+        break;
+      case 'nextDay':
+        potentialDate = getNextDay(date);
+        break;
+      case 'previousSameWeekDay':
+        potentialDate = subDays(date, 7);
+        break;
+      case 'nextSameWeekDay':
+        potentialDate = addDays(date, 7);
+        break;
+      case 'firstOfMonth':
+        potentialDate = getFirstOfMonth(date);
+        break;
+      case 'lastOfMonth':
+        potentialDate = getLastOfMonth(date);
+        break;
+      case 'previousMonth':
+        potentialDate = getPreviousMonth(date);
+        break;
+      case 'nextMonth':
+        potentialDate = getNextMonth(date);
+        break;
+      case 'previousYear':
+        potentialDate = getPreviousYear(date);
+        break;
+      case 'nextYear':
+        potentialDate = getNextYear(date);
+        break;
+    }
+
+    while (this.disableDate(potentialDate) && !outOfRange) {
+      switch (direction) {
+        case 'previousDay':
+        case 'lastOfMonth':
+          potentialDate = getPreviousDay(potentialDate);
+          break;
+        case 'nextDay':
+        case 'firstOfMonth':
+        case 'previousMonth':
+        case 'nextMonth':
+        case 'previousYear':
+        case 'nextYear':
+          potentialDate = getNextDay(potentialDate);
+          break;
+        case 'previousSameWeekDay':
+          potentialDate = subDays(potentialDate, 7);
+          break;
+        case 'nextSameWeekDay':
+          potentialDate = addDays(potentialDate, 7);
+          break;
+      }
+
+      switch (direction) {
+        case 'firstOfMonth':
+        case 'lastOfMonth':
+        case 'previousYear':
+        case 'nextYear':
+          outOfRange = potentialDate.getMonth() !== date.getMonth();
+          break;
+        case 'previousMonth':
+          outOfRange = potentialDate.getMonth() !== date.getMonth() - 1;
+          break;
+        case 'nextMonth':
+          outOfRange = potentialDate.getMonth() !== date.getMonth() + 1;
+          break;
+        default:
+          outOfRange = !isDateInRange(potentialDate, {
+            from: subDays(date, this.maxSearchDays),
+            to: addDays(date, this.maxSearchDays)
+          });
+          break;
+      }
+    }
+
+    if (outOfRange) {
+      return date;
+    }
+
+    return potentialDate;
+  };
+
   private nextMonth = () => {
     this.updateCurrentDate(getNextMonth(this.currentDate));
   };
@@ -350,38 +452,68 @@ export class WCDatepicker {
 
     if (event.code === 'ArrowLeft') {
       event.preventDefault();
-      this.updateCurrentDate(getPreviousDay(this.currentDate), true);
+      this.updateCurrentDate(
+        this.getAvailableDate(this.currentDate, 'previousDay'),
+        true
+      );
     } else if (event.code === 'ArrowRight') {
       event.preventDefault();
-      this.updateCurrentDate(getNextDay(this.currentDate), true);
+      this.updateCurrentDate(
+        this.getAvailableDate(this.currentDate, 'nextDay'),
+        true
+      );
     } else if (event.code === 'ArrowUp') {
       event.preventDefault();
-      this.updateCurrentDate(subDays(this.currentDate, 7), true);
+      this.updateCurrentDate(
+        this.getAvailableDate(this.currentDate, 'previousSameWeekDay'),
+        true
+      );
     } else if (event.code === 'ArrowDown') {
       event.preventDefault();
-      this.updateCurrentDate(addDays(this.currentDate, 7), true);
+      this.updateCurrentDate(
+        this.getAvailableDate(this.currentDate, 'nextSameWeekDay'),
+        true
+      );
     } else if (event.code === 'PageUp') {
       event.preventDefault();
 
       if (event.shiftKey) {
-        this.updateCurrentDate(getPreviousYear(this.currentDate), true);
+        this.updateCurrentDate(
+          this.getAvailableDate(this.currentDate, 'previousYear'),
+          true
+        );
       } else {
-        this.updateCurrentDate(getPreviousMonth(this.currentDate), true);
+        this.updateCurrentDate(
+          this.getAvailableDate(this.currentDate, 'previousMonth'),
+          true
+        );
       }
     } else if (event.code === 'PageDown') {
       event.preventDefault();
 
       if (event.shiftKey) {
-        this.updateCurrentDate(getNextYear(this.currentDate), true);
+        this.updateCurrentDate(
+          this.getAvailableDate(this.currentDate, 'nextYear'),
+          true
+        );
       } else {
-        this.updateCurrentDate(getNextMonth(this.currentDate), true);
+        this.updateCurrentDate(
+          this.getAvailableDate(this.currentDate, 'nextMonth'),
+          true
+        );
       }
     } else if (event.code === 'Home') {
       event.preventDefault();
-      this.updateCurrentDate(getFirstOfMonth(this.currentDate), true);
+      this.updateCurrentDate(
+        this.getAvailableDate(this.currentDate, 'firstOfMonth'),
+        true
+      );
     } else if (event.code === 'End') {
       event.preventDefault();
-      this.updateCurrentDate(getLastOfMonth(this.currentDate), true);
+      this.updateCurrentDate(
+        this.getAvailableDate(this.currentDate, 'lastOfMonth'),
+        true
+      );
     } else if (event.code === 'Space' || event.code === 'Enter') {
       event.preventDefault();
       this.onSelectDate(this.currentDate);
@@ -647,7 +779,9 @@ export class WCDatepicker {
                             onMouseLeave={this.onMouseLeave}
                             role="gridcell"
                             tabIndex={
-                              isSameDay(day, this.currentDate) && !this.disabled
+                              isSameDay(day, this.currentDate) &&
+                              !this.disableDate(day) &&
+                              !this.disabled
                                 ? 0
                                 : -1
                             }
