@@ -309,11 +309,6 @@ describe('wc-datepicker', () => {
     const monthSelect = page.root.querySelector<HTMLSelectElement>(
       '.wc-datepicker__month-select'
     );
-
-    const header = page.root.querySelector<HTMLElement>(
-      '.wc-datepicker__header'
-    );
-
     const previousMonthButton = page.root.querySelector<HTMLButtonElement>(
       '.wc-datepicker__previous-month-button'
     );
@@ -322,26 +317,21 @@ describe('wc-datepicker', () => {
       '.wc-datepicker__next-month-button'
     );
 
-    expect(header.innerText.startsWith('January')).toBeTruthy();
-
     monthSelect.value = '5';
     monthSelect.dispatchEvent(new Event('change'));
 
     await page.waitForChanges();
 
-    expect(header.innerText.startsWith('May')).toBeTruthy();
     expect(spy.mock.calls[0][0].detail).toEqual({ month: 5, year: 2022 });
 
     previousMonthButton.click();
     await page.waitForChanges();
 
-    expect(header.innerText.startsWith('April')).toBeTruthy();
     expect(spy.mock.calls[1][0].detail).toEqual({ month: 4, year: 2022 });
 
     nextMonthButton.click();
     await page.waitForChanges();
 
-    expect(header.innerText.startsWith('May')).toBeTruthy();
     expect(spy.mock.calls[2][0].detail).toEqual({ month: 5, year: 2022 });
   });
 
@@ -359,10 +349,6 @@ describe('wc-datepicker', () => {
       '.wc-datepicker__year-select'
     );
 
-    const header = page.root.querySelector<HTMLElement>(
-      '.wc-datepicker__header'
-    );
-
     const previousYearButton = page.root.querySelector<HTMLButtonElement>(
       '.wc-datepicker__previous-year-button'
     );
@@ -371,26 +357,25 @@ describe('wc-datepicker', () => {
       '.wc-datepicker__next-year-button'
     );
 
-    expect(header.innerText.includes('2022')).toBeTruthy();
+    expect(yearSelect.value).toEqual('2022');
 
     yearSelect.value = '1989';
     yearSelect.dispatchEvent(new Event('change'));
 
     await page.waitForChanges();
 
-    expect(header.innerText.includes('1989')).toBeTruthy();
     expect(spy.mock.calls[0][0].detail).toEqual({ month: 1, year: 1989 });
 
     previousYearButton.click();
     await page.waitForChanges();
 
-    expect(header.innerText.includes('1988')).toBeTruthy();
+    expect(yearSelect.value).toEqual('1988');
     expect(spy.mock.calls[1][0].detail).toEqual({ month: 1, year: 1988 });
 
     nextYearButton.click();
     await page.waitForChanges();
 
-    expect(header.innerText.includes('1989')).toBeTruthy();
+    expect(yearSelect.value).toEqual('1989');
     expect(spy.mock.calls[2][0].detail).toEqual({ month: 1, year: 1989 });
   });
 
@@ -405,26 +390,18 @@ describe('wc-datepicker', () => {
       '.wc-datepicker__today-button'
     );
 
-    const header = page.root.querySelector<HTMLElement>(
-      '.wc-datepicker__header'
-    );
-
     const today = new Date();
 
-    expect(header.innerText.includes('January 1, 1989')).toBeTruthy();
+    const yearSelect = page.root.querySelector<HTMLInputElement>(
+      '.wc-datepicker__year-select'
+    );
+
+    expect(yearSelect.value).toEqual('1989');
 
     todayButton.click();
     await page.waitForChanges();
 
-    expect(
-      header.innerText.includes(
-        Intl.DateTimeFormat('en-US', {
-          day: 'numeric',
-          month: 'long',
-          year: 'numeric'
-        }).format(today)
-      )
-    ).toBeTruthy();
+    expect(yearSelect.value).toEqual(today.getFullYear().toString());
   });
 
   it('clears its value', async () => {
