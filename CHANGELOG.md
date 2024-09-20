@@ -4,11 +4,11 @@
 
 ### Minor Changes
 
-- [`8717afd`](https://github.com/Sqrrl/wc-datepicker/commit/8717afd7b3a41c7b726cb61a711a02b0a1ea5cf7) Thanks [@Sqrrl](https://github.com/Sqrrl)! - Various accessibility improvements. Thanks @remischwartz.
+- [`8717afd`](https://github.com/Sqrrl/wc-datepicker/commit/8717afd7b3a41c7b726cb61a711a02b0a1ea5cf7) Thanks [@remischwartz](https://github.com/Sqrrl)! - Various accessibility improvements.
 
 ### Patch Changes
 
-- [`8717afd`](https://github.com/Sqrrl/wc-datepicker/commit/8717afd7b3a41c7b726cb61a711a02b0a1ea5cf7) Thanks [@Sqrrl](https://github.com/Sqrrl)! - Prevent focus of disabled dates. Thanks @remischwartz.
+- [`8717afd`](https://github.com/Sqrrl/wc-datepicker/commit/8717afd7b3a41c7b726cb61a711a02b0a1ea5cf7) Thanks [@remischwartz](https://github.com/Sqrrl)! - Prevent focus of disabled dates.
 
 ## 0.5.3
 
