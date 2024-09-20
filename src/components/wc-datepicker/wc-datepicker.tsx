@@ -186,15 +186,36 @@ export class WCDatepicker {
   }
 
   private getTitle() {
-    if (!Boolean(this.currentDate)) {
+    if (!Boolean(this.value)) {
       return;
     }
 
-    return Intl.DateTimeFormat(this.locale, {
-      day: 'numeric',
-      month: 'long',
-      year: 'numeric'
-    }).format(this.currentDate);
+    if (this.isRangeValue(this.value)) {
+      const startDate = Intl.DateTimeFormat(this.locale, {
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric'
+      }).format(this.value[0]);
+      const endDate = this.value[1]
+        ? Intl.DateTimeFormat(this.locale, {
+            day: 'numeric',
+            month: 'long',
+            year: 'numeric'
+          }).format(this.value[1])
+        : undefined;
+
+      if (Boolean(endDate)) {
+        return `${startDate} - ${endDate}`;
+      } else {
+        return startDate;
+      }
+    } else {
+      return Intl.DateTimeFormat(this.locale, {
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric'
+      }).format(this.value);
+    }
   }
 
   private focusDate(date: Date) {
@@ -603,6 +624,7 @@ export class WCDatepicker {
             )}
             <span class={this.getClassName('current-month')}>
               <select
+                title={this.labels.monthSelect}
                 aria-label={this.labels.monthSelect}
                 class={this.getClassName('month-select')}
                 disabled={this.disabled}
@@ -620,6 +642,7 @@ export class WCDatepicker {
                 ))}
               </select>
               <input
+                title={this.labels.yearSelect}
                 aria-label={this.labels.yearSelect}
                 class={this.getClassName('year-select')}
                 disabled={this.disabled}
@@ -691,6 +714,7 @@ export class WCDatepicker {
                 <tr class={this.getClassName('weekday-row')}>
                   {this.weekdays.map((weekday) => (
                     <th
+                      aria-label={weekday[1]}
                       abbr={weekday[1]}
                       class={this.getClassName('weekday')}
                       key={weekday[0]}
