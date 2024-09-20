@@ -780,7 +780,7 @@ export class WCDatepicker {
                             role="gridcell"
                             tabIndex={
                               isSameDay(day, this.currentDate) &&
-                              !this.disableDate(day) &&
+                              !isDisabled &&
                               !this.disabled
                                 ? 0
                                 : -1
