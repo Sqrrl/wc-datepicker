@@ -1,5 +1,11 @@
 # wc-datepicker
 
+## 0.7.0
+
+### Minor Changes
+
+- [`c75cb2b`](https://github.com/Sqrrl/wc-datepicker/commit/c75cb2bc3ea2fc7782a85ff73f6cf081e7881784) Thanks [@ilarne](https://github.com/ilarne)! - Add `aria-current="date"` to current date's cell.
+
 ## 0.6.0
 
 ### Minor Changes
