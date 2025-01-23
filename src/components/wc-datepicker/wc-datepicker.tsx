@@ -795,6 +795,7 @@ export class WCDatepicker {
                           <td
                             aria-disabled={String(isDisabled)}
                             aria-selected={isSelected ? 'true' : undefined}
+                            aria-current={isToday ? 'date' : undefined}
                             class={className}
                             data-date={getISODateString(day)}
                             key={cellKey}
