@@ -485,4 +485,29 @@ describe('wc-datepicker', () => {
 
     expect(yearSelect.value).toBe('0');
   });
+
+  it('respects goToRangeStartOnSelect by jumping to start or end of range', async () => {
+    const page = await newSpecPage({
+      components: [WCDatepicker],
+      html: `<wc-datepicker range></wc-datepicker>`,
+      language: 'en'
+    });
+
+    const jan1 = new Date('2022-01-01');
+    const mar1 = new Date('2022-03-01');
+
+    page.root.goToRangeStartOnSelect = true;
+    page.root.value = [jan1, mar1];
+    await page.waitForChanges();
+
+    expect(getSelectedMonth(page)).toBe(1);
+    expect(getSelectedYear(page)).toBe(2022);
+
+    page.root.goToRangeStartOnSelect = false;
+    page.root.value = [jan1, mar1];
+    await page.waitForChanges();
+
+    expect(getSelectedMonth(page)).toBe(3);
+    expect(getSelectedYear(page)).toBe(2022);
+  });
 });

@@ -13,6 +13,7 @@ export namespace Components {
         "disabled"?: boolean;
         "elementClassName"?: string;
         "firstDayOfWeek"?: number;
+        "goToRangeStartOnSelect"?: boolean;
         "labels"?: WCDatepickerLabels;
         "locale"?: string;
         "maxSearchDays"?: number;
@@ -52,6 +53,7 @@ declare namespace LocalJSX {
         "disabled"?: boolean;
         "elementClassName"?: string;
         "firstDayOfWeek"?: number;
+        "goToRangeStartOnSelect"?: boolean;
         "labels"?: WCDatepickerLabels;
         "locale"?: string;
         "maxSearchDays"?: number;

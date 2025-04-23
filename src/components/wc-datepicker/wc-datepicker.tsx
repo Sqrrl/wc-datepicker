@@ -89,6 +89,7 @@ export class WCDatepicker {
   @Prop() todayButtonContent?: string;
   @Prop({ mutable: true }) value?: Date | Date[];
   @Prop() maxSearchDays?: number = 365;
+  @Prop() goToRangeStartOnSelect?: boolean = true;
 
   @State() currentDate: Date;
   @State() hoveredDate: Date;
@@ -132,12 +133,16 @@ export class WCDatepicker {
 
   @Watch('value')
   watchValue() {
-    if (Boolean(this.value)) {
-      if (Array.isArray(this.value) && this.value.length >= 1) {
-        this.currentDate = this.value[0];
-      } else if (this.value instanceof Date) {
-        this.currentDate = this.value;
-      }
+    if (!Boolean(this.value)) {
+      return;
+    }
+
+    if (Array.isArray(this.value)) {
+      this.currentDate = this.value.length > 1 && !this.goToRangeStartOnSelect
+        ? this.value[1]
+        : this.value[0];
+    } else if (this.value instanceof Date) {
+      this.currentDate = this.value;
     }
   }
 
