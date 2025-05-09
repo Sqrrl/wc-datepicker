@@ -4,7 +4,7 @@
 
 ### Minor Changes
 
-- [`975dea0`](https://github.com/Sqrrl/wc-datepicker/commit/975dea04c6b66bc78feadf37522a9d3d7234e63c) Thanks [@Sqrrl](https://github.com/Sqrrl)! - Add goToRangeStartOnSelect prop
+- [`975dea0`](https://github.com/Sqrrl/wc-datepicker/commit/975dea04c6b66bc78feadf37522a9d3d7234e63c) Thanks [@broileri](https://github.com/broileri)! - Add goToRangeStartOnSelect prop
 
 ## 0.7.0
 
