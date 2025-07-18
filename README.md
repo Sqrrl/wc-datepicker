@@ -13,6 +13,7 @@
     <img alt="Github test action status" src="https://github.com/Sqrrl/wc-datepicker/actions/workflows/test.yml/badge.svg" />
     <img alt="Github publish action status" src="https://github.com/Sqrrl/wc-datepicker/actions/workflows/publish.yml/badge.svg" />
     <img alt="Github docs action status" src="https://github.com/Sqrrl/wc-datepicker/actions/workflows/docs.yml/badge.svg" />
+    <img alt="Overall test coverage" src="https://img.shields.io/badge/coverage-89%25-brightgreen" />
   </div>
 </div>
 
