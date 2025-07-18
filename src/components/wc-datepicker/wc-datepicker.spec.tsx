@@ -510,4 +510,61 @@ describe('wc-datepicker', () => {
     expect(getSelectedMonth(page)).toBe(3);
     expect(getSelectedYear(page)).toBe(2022);
   });
+
+  it('handles mouse hover events for date cells', async () => {
+    const page = await newSpecPage({
+      components: [WCDatepicker],
+      html: `<wc-datepicker range start-date="2022-01-01"></wc-datepicker>`,
+      language: 'en'
+    });
+
+    await page.waitForChanges();
+
+    const mockTarget = {
+      closest: jest.fn().mockReturnValue({
+        dataset: { date: '2022-01-05' }
+      })
+    };
+
+    const component = page.rootInstance as WCDatepicker;
+    const mockEvent = { target: mockTarget } as unknown as MouseEvent;
+
+    component['onMouseEnter'](mockEvent);
+    await page.waitForChanges();
+
+    expect(component['hoveredDate']).toBeDefined();
+    expect(component['hoveredDate'].toISOString()).toContain('2022-01-05');
+
+    component['onMouseLeave']();
+    await page.waitForChanges();
+
+    expect(component['hoveredDate']).toBeUndefined();
+  });
+
+  it('ignores mouse events when disabled', async () => {
+    const page = await newSpecPage({
+      components: [WCDatepicker],
+      html: `<wc-datepicker disabled range start-date="2022-01-01"></wc-datepicker>`,
+      language: 'en'
+    });
+
+    await page.waitForChanges();
+
+    const component = page.rootInstance as WCDatepicker;
+
+    expect(component.disabled).toBe(true);
+
+    const mockTarget = {
+      closest: jest.fn().mockReturnValue({
+        dataset: { date: '2022-01-05' }
+      })
+    };
+
+    const mockEvent = { target: mockTarget } as unknown as MouseEvent;
+
+    component['onMouseEnter'](mockEvent);
+    await page.waitForChanges();
+
+    expect(component['hoveredDate']).toBeUndefined();
+  });
 });

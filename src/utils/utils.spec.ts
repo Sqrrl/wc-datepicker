@@ -58,6 +58,9 @@ describe('format', () => {
   it('returns ISO date string', () => {
     expect(getISODateString(new Date('2022-01-01'))).toEqual('2022-01-01');
     expect(getISODateString(new Date('2022-01-20'))).toEqual('2022-01-20');
+    expect(getISODateString('2022-01-20' as unknown as Date)).toEqual(
+      undefined
+    );
   });
 
   it('returns last of month', () => {

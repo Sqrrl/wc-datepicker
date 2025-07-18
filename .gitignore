@@ -20,6 +20,7 @@ log.txt
 .sass-cache/
 .versions/
 node_modules/
+coverage/
 $RECYCLE.BIN/
 
 .DS_Store
