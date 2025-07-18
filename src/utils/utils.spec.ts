@@ -143,7 +143,7 @@ describe('format', () => {
     );
   });
 
-  it('returns months labels', () => {
+  it('returns weekday labels with max 3 characters', () => {
     expect(getWeekDays(0, 'en-US')).toEqual([
       ['Sun', 'Sunday'],
       ['Mon', 'Monday'],
@@ -162,6 +162,16 @@ describe('format', () => {
       ['Fri', 'Friday'],
       ['Sat', 'Saturday'],
       ['Sun', 'Sunday']
+    ]);
+
+    expect(getWeekDays(1, 'pt-PT')).toEqual([
+      ['seg', 'segunda-feira'],
+      ['ter', 'terça-feira'],
+      ['qua', 'quarta-feira'],
+      ['qui', 'quinta-feira'],
+      ['sex', 'sexta-feira'],
+      ['sáb', 'sábado'],
+      ['dom', 'domingo']
     ]);
   });
 

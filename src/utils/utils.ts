@@ -159,7 +159,9 @@ export function getWeekDays(
       return [
         Intl.DateTimeFormat(locale, {
           weekday: 'short'
-        }).format(date),
+        })
+          .format(date)
+          .slice(0, 3),
         Intl.DateTimeFormat(locale, {
           weekday: 'long'
         }).format(date)
