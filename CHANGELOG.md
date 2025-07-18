@@ -1,5 +1,11 @@
 # wc-datepicker
 
+## 0.8.1
+
+### Patch Changes
+
+- [`efdbea4`](https://github.com/Sqrrl/wc-datepicker/commit/efdbea41d7b9f11455b03374ffe693db3c053be3) Thanks [@Sqrrl](https://github.com/Sqrrl)! - Limit weekday labels to 3 characters to prevent overflow
+
 ## 0.8.0
 
 ### Minor Changes
