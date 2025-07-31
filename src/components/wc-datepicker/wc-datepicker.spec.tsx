@@ -322,17 +322,17 @@ describe('wc-datepicker', () => {
 
     await page.waitForChanges();
 
-    expect(spy.mock.calls[0][0].detail).toEqual({ month: 5, year: 2022 });
+    expect(spy.mock.calls[0][0].detail).toEqual({ month: 5, year: 2022, day: 1 });
 
     previousMonthButton.click();
     await page.waitForChanges();
 
-    expect(spy.mock.calls[1][0].detail).toEqual({ month: 4, year: 2022 });
+    expect(spy.mock.calls[1][0].detail).toEqual({ month: 4, year: 2022, day: 1 });
 
     nextMonthButton.click();
     await page.waitForChanges();
 
-    expect(spy.mock.calls[2][0].detail).toEqual({ month: 5, year: 2022 });
+    expect(spy.mock.calls[2][0].detail).toEqual({ month: 5, year: 2022, day: 1 });
   });
 
   it('changes year', async () => {
@@ -364,19 +364,19 @@ describe('wc-datepicker', () => {
 
     await page.waitForChanges();
 
-    expect(spy.mock.calls[0][0].detail).toEqual({ month: 1, year: 1989 });
+    expect(spy.mock.calls[0][0].detail).toEqual({ month: 1, year: 1989, day: 1 });
 
     previousYearButton.click();
     await page.waitForChanges();
 
     expect(yearSelect.value).toEqual('1988');
-    expect(spy.mock.calls[1][0].detail).toEqual({ month: 1, year: 1988 });
+    expect(spy.mock.calls[1][0].detail).toEqual({ month: 1, year: 1988, day: 1 });
 
     nextYearButton.click();
     await page.waitForChanges();
 
     expect(yearSelect.value).toEqual('1989');
-    expect(spy.mock.calls[2][0].detail).toEqual({ month: 1, year: 1989 });
+    expect(spy.mock.calls[2][0].detail).toEqual({ month: 1, year: 1989, day: 1 });
   });
 
   it('jumps to current month', async () => {
