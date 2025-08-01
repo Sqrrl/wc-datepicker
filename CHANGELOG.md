@@ -1,5 +1,11 @@
 # wc-datepicker
 
+## 0.9.0
+
+### Minor Changes
+
+- [`430ec92`](https://github.com/Sqrrl/wc-datepicker/commit/430ec9267f2b45374ced427a7850516c9d31faeb) Thanks [@Sqrrl](https://github.com/Sqrrl)! - Thanks @Exigerr! - Add "day" property to "changeMonth" event
+
 ## 0.8.1
 
 ### Patch Changes
