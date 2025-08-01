@@ -58,6 +58,7 @@ const defaultLabels: WCDatepickerLabels = {
 export interface MonthChangedEventDetails {
   month: number;
   year: number;
+  day: number;
 }
 
 @Component({
@@ -244,7 +245,7 @@ export class WCDatepicker {
       year !== this.currentDate.getFullYear();
 
     if (monthChanged) {
-      this.changeMonth.emit({ month: getMonth(date), year: getYear(date) });
+      this.changeMonth.emit({ month: getMonth(date), year: getYear(date), day: date.getDate() });
 
       if (moveFocus) {
         this.moveFocusAfterMonthChanged = true;
