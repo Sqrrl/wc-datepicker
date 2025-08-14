@@ -5,6 +5,7 @@ import {
   EventEmitter,
   h,
   Host,
+  Method,
   Prop,
   State,
   Watch
@@ -92,14 +93,19 @@ export class WCDatepicker {
   @Prop() maxSearchDays?: number = 365;
   @Prop() goToRangeStartOnSelect?: boolean = true;
 
+  @Prop({ mutable: true }) showDayDescriptions?: boolean = false;
+  @Prop({ mutable: true }) addDateDescription?: (date: Date) => string;
+
   @State() currentDate: Date;
   @State() hoveredDate: Date;
   @State() weekdays: string[][];
 
+  
   @Event() selectDate: EventEmitter<string | string[] | undefined>;
   @Event() changeMonth: EventEmitter<MonthChangedEventDetails>;
 
   private moveFocusAfterMonthChanged: Boolean;
+  private dayDescriptions: Record<string, string> = {};
 
   componentWillLoad() {
     this.init();
@@ -152,6 +158,16 @@ export class WCDatepicker {
       this.focusDate(this.currentDate);
       this.moveFocusAfterMonthChanged = false;
     }
+  }
+
+  @Method()
+  async getDescriptionForDay(date: Date): Promise<string> {
+    return this.dayDescriptions[getISODateString(date)] || '';
+  }
+
+  @Method()
+  async getAllDayDescriptions(): Promise<Record<string, string>> {
+    return { ...this.dayDescriptions };
   }
 
   private init = () => {
@@ -222,6 +238,18 @@ export class WCDatepicker {
         year: 'numeric'
       }).format(this.value);
     }
+  }
+
+  private setDescriptionForDay(date: Date): string {
+    if (!this.showDayDescriptions || !this.addDateDescription) {
+      return '';
+    }
+    
+    if (!this.dayDescriptions[getISODateString(date)]) {
+      this.dayDescriptions[getISODateString(date)] = this.addDateDescription(date) || '';
+    }
+
+    return this.dayDescriptions[getISODateString(date)] || '';
   }
 
   private focusDate(date: Date) {
@@ -573,7 +601,8 @@ export class WCDatepicker {
           aria-label={this.labels.picker}
           class={{
             [this.getClassName()]: true,
-            [`${this.getClassName()}--disabled`]: this.disabled
+            [`${this.getClassName()}--disabled`]: this.disabled,
+            [`${this.getClassName()}--with-descriptions`]: this.showDayDescriptions
           }}
           role="group"
         >
@@ -777,6 +806,8 @@ export class WCDatepicker {
                         const isDisabled = this.disableDate(day);
 
                         const cellKey = `cell-${day.getMonth()}-${day.getDate()}`;
+                        
+                        const dayDescription = this.setDescriptionForDay(day);
 
                         const className = {
                           [this.getClassName('date')]: true,
@@ -817,12 +848,20 @@ export class WCDatepicker {
                                 : -1
                             }
                           >
-                            <Tag aria-hidden="true">{day.getDate()}</Tag>
+                            <div class={this.getClassName('date-content')}>
+                              <Tag aria-hidden="true">{day.getDate()}</Tag>
+                              {this.showDayDescriptions && dayDescription && (
+                                <span class={this.getClassName('date-description')} aria-hidden="true">
+                                  {dayDescription}
+                                </span>
+                              )}
+                            </div>
                             <span class="visually-hidden">
                               {Intl.DateTimeFormat(this.locale, {
                                 day: 'numeric',
                                 month: 'long'
                               }).format(day)}
+                              {this.showDayDescriptions && dayDescription && `, ${dayDescription}`}
                             </span>
                           </td>
                         );
