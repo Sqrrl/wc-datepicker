@@ -1,5 +1,11 @@
 # wc-datepicker
 
+## 0.9.1
+
+### Patch Changes
+
+- [#47](https://github.com/Sqrrl/wc-datepicker/pull/47) [`bae1ce1`](https://github.com/Sqrrl/wc-datepicker/commit/bae1ce1d53701f3b58b64448ce5172e013c6b4a6) Thanks [@Sqrrl](https://github.com/Sqrrl)! - Make sure the calendar can retrieve focus, even if the current date is disabled.
+
 ## 0.9.0
 
 ### Minor Changes
