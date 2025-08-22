@@ -31,8 +31,10 @@
         console.log(event);
       });
 
-      datepicker.disableDate = (date) =>
-        date.getDay() === 6 || date.getDay() === 0;
+      datepicker.disableDate = (date) => {
+        const today = new Date();
+        return today > date;
+      };
     </script>
   </body>
 </html>

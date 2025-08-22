@@ -139,9 +139,10 @@ export class WCDatepicker {
     }
 
     if (Array.isArray(this.value)) {
-      this.currentDate = this.value.length > 1 && !this.goToRangeStartOnSelect
-        ? this.value[1]
-        : this.value[0];
+      this.currentDate =
+        this.value.length > 1 && !this.goToRangeStartOnSelect
+          ? this.value[1]
+          : this.value[0];
     } else if (this.value instanceof Date) {
       this.currentDate = this.value;
     }
@@ -245,7 +246,11 @@ export class WCDatepicker {
       year !== this.currentDate.getFullYear();
 
     if (monthChanged) {
-      this.changeMonth.emit({ month: getMonth(date), year: getYear(date), day: date.getDate() });
+      this.changeMonth.emit({
+        month: getMonth(date),
+        year: getYear(date),
+        day: date.getDate()
+      });
 
       if (moveFocus) {
         this.moveFocusAfterMonthChanged = true;
@@ -810,9 +815,7 @@ export class WCDatepicker {
                             onMouseLeave={this.onMouseLeave}
                             role="gridcell"
                             tabIndex={
-                              isSameDay(day, this.currentDate) &&
-                              !isDisabled &&
-                              !this.disabled
+                              isSameDay(day, this.currentDate) && !this.disabled
                                 ? 0
                                 : -1
                             }
