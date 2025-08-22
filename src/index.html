@@ -22,6 +22,16 @@
 
     <script>
       const datepicker = document.getElementById('datepicker');
+      datepicker.showDayDescriptions = true;
+
+      datepicker.addDateDescription = (date) => {
+        const day = date.getDate();
+        const month = date.getMonth();
+
+        if (month === 3 && day === 11) return '845';
+        if (month === 5 && day === 27) return '900';
+        return '';
+      };
 
       datepicker.addEventListener('selectDate', (event) => {
         console.log(event);

@@ -183,7 +183,7 @@ describe('wc-datepicker', () => {
     await page.waitForChanges();
 
     expect(
-      page.root.querySelector('.wc-datepicker__date--current').children[0]
+      page.root.querySelector('.wc-datepicker__date--current .wc-datepicker__date-content').children[0]
         .innerHTML
     ).toBe('2');
 
@@ -191,7 +191,7 @@ describe('wc-datepicker', () => {
     await page.waitForChanges();
 
     expect(
-      page.root.querySelector('.wc-datepicker__date--current').children[0]
+      page.root.querySelector('.wc-datepicker__date--current .wc-datepicker__date-content').children[0]
         .innerHTML
     ).toBe('3');
 
@@ -199,7 +199,7 @@ describe('wc-datepicker', () => {
     await page.waitForChanges();
 
     expect(
-      page.root.querySelector('.wc-datepicker__date--current').children[0]
+      page.root.querySelector('.wc-datepicker__date--current .wc-datepicker__date-content').children[0]
         .innerHTML
     ).toBe('10');
 
@@ -207,7 +207,7 @@ describe('wc-datepicker', () => {
     await page.waitForChanges();
 
     expect(
-      page.root.querySelector('.wc-datepicker__date--current').children[0]
+      page.root.querySelector('.wc-datepicker__date--current .wc-datepicker__date-content').children[0]
         .innerHTML
     ).toBe('9');
 
@@ -215,7 +215,7 @@ describe('wc-datepicker', () => {
     await page.waitForChanges();
 
     expect(
-      page.root.querySelector('.wc-datepicker__date--current').children[0]
+      page.root.querySelector('.wc-datepicker__date--current .wc-datepicker__date-content').children[0]
         .innerHTML
     ).toBe('2');
 
@@ -223,7 +223,7 @@ describe('wc-datepicker', () => {
     await page.waitForChanges();
 
     expect(
-      page.root.querySelector('.wc-datepicker__date--current').children[0]
+      page.root.querySelector('.wc-datepicker__date--current .wc-datepicker__date-content').children[0]
         .innerHTML
     ).toBe('31');
 
@@ -231,7 +231,7 @@ describe('wc-datepicker', () => {
     await page.waitForChanges();
 
     expect(
-      page.root.querySelector('.wc-datepicker__date--current').children[0]
+      page.root.querySelector('.wc-datepicker__date--current .wc-datepicker__date-content').children[0]
         .innerHTML
     ).toBe('1');
 
@@ -239,7 +239,7 @@ describe('wc-datepicker', () => {
     await page.waitForChanges();
 
     expect(
-      page.root.querySelector('.wc-datepicker__date--current').children[0]
+      page.root.querySelector('.wc-datepicker__date--current .wc-datepicker__date-content').children[0]
         .innerHTML
     ).toBe('1');
 
@@ -247,7 +247,7 @@ describe('wc-datepicker', () => {
     await page.waitForChanges();
 
     expect(
-      page.root.querySelector('.wc-datepicker__date--current').children[0]
+      page.root.querySelector('.wc-datepicker__date--current .wc-datepicker__date-content').children[0]
         .innerHTML
     ).toBe('1');
   });
@@ -566,5 +566,34 @@ describe('wc-datepicker', () => {
     await page.waitForChanges();
 
     expect(component['hoveredDate']).toBeUndefined();
+  });
+
+  it('add date descriptions to date cells', async () => {
+    const page = await newSpecPage({
+      components: [WCDatepicker],
+      html: `<wc-datepicker showDayDescriptions></wc-datepicker>`,
+      language: 'en'
+    });
+
+    // Since months are zero based
+    const november = 11 - 1;
+    const dayThird = 3;
+    const descriptionText = 'Desc.';
+    const currentDate = new Date('2025-11-03');
+    const component = page.rootInstance as WCDatepicker;
+    page.root.startDate = currentDate;
+    component.showDayDescriptions = true;
+
+    component.addDateDescription = (date: Date) => {
+      if (date.getMonth() === november && date.getDate() === dayThird) return descriptionText;
+      return ``;
+    };
+    
+    await page.waitForChanges();
+    
+    const getDayWithDescription = await component.getDescriptionForDay(currentDate);
+    
+    expect(component.showDayDescriptions).toBe(true);
+    expect(getDayWithDescription).toBe(descriptionText);
   });
 });
