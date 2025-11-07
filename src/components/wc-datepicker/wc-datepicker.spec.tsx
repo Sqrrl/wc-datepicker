@@ -322,17 +322,82 @@ describe('wc-datepicker', () => {
 
     await page.waitForChanges();
 
-    expect(spy.mock.calls[0][0].detail).toEqual({ month: 5, year: 2022, day: 1 });
+    expect(spy.mock.calls[0][0].detail).toEqual({
+      month: 5,
+      year: 2022,
+      day: 1
+    });
 
     previousMonthButton.click();
     await page.waitForChanges();
 
-    expect(spy.mock.calls[1][0].detail).toEqual({ month: 4, year: 2022, day: 1 });
+    expect(spy.mock.calls[1][0].detail).toEqual({
+      month: 4,
+      year: 2022,
+      day: 1
+    });
 
     nextMonthButton.click();
     await page.waitForChanges();
 
-    expect(spy.mock.calls[2][0].detail).toEqual({ month: 5, year: 2022, day: 1 });
+    expect(spy.mock.calls[2][0].detail).toEqual({
+      month: 5,
+      year: 2022,
+      day: 1
+    });
+  });
+
+  it('clamps date when switching month and date is no longer valid', async () => {
+    const page = await newSpecPage({
+      components: [WCDatepicker],
+      html: `<wc-datepicker start-date="2022-01-31"></wc-datepicker>`,
+      language: 'en'
+    });
+
+    const spy = jest.fn();
+    page.root.addEventListener('changeMonth', spy);
+
+    const monthSelect = page.root.querySelector<HTMLSelectElement>(
+      '.wc-datepicker__month-select'
+    );
+
+    expect(getSelectedMonth(page)).toBe(1);
+    expect(getSelectedYear(page)).toBe(2022);
+
+    monthSelect.value = '2';
+    monthSelect.dispatchEvent(new Event('change'));
+    await page.waitForChanges();
+
+    expect(spy.mock.calls[0][0].detail).toEqual({
+      month: 2,
+      year: 2022,
+      day: 28
+    });
+  });
+
+  it('clamps date when switching year and date is no longer valid (leap years)', async () => {
+    const page = await newSpecPage({
+      components: [WCDatepicker],
+      html: `<wc-datepicker start-date="2020-02-29"></wc-datepicker>`,
+      language: 'en'
+    });
+
+    const spy = jest.fn();
+    page.root.addEventListener('changeMonth', spy);
+
+    const yearSelect = page.root.querySelector<HTMLInputElement>(
+      '.wc-datepicker__year-select'
+    );
+
+    yearSelect.value = '2021';
+    yearSelect.dispatchEvent(new Event('change'));
+    await page.waitForChanges();
+
+    expect(spy.mock.calls[0][0].detail).toEqual({
+      month: 2,
+      year: 2021,
+      day: 28
+    });
   });
 
   it('changes year', async () => {
@@ -364,19 +429,31 @@ describe('wc-datepicker', () => {
 
     await page.waitForChanges();
 
-    expect(spy.mock.calls[0][0].detail).toEqual({ month: 1, year: 1989, day: 1 });
+    expect(spy.mock.calls[0][0].detail).toEqual({
+      month: 1,
+      year: 1989,
+      day: 1
+    });
 
     previousYearButton.click();
     await page.waitForChanges();
 
     expect(yearSelect.value).toEqual('1988');
-    expect(spy.mock.calls[1][0].detail).toEqual({ month: 1, year: 1988, day: 1 });
+    expect(spy.mock.calls[1][0].detail).toEqual({
+      month: 1,
+      year: 1988,
+      day: 1
+    });
 
     nextYearButton.click();
     await page.waitForChanges();
 
     expect(yearSelect.value).toEqual('1989');
-    expect(spy.mock.calls[2][0].detail).toEqual({ month: 1, year: 1989, day: 1 });
+    expect(spy.mock.calls[2][0].detail).toEqual({
+      month: 1,
+      year: 1989,
+      day: 1
+    });
   });
 
   it('jumps to current month', async () => {

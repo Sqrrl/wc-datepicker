@@ -448,11 +448,17 @@ export class WCDatepicker {
 
   private onMonthSelect = (event: Event) => {
     const month = +(event.target as HTMLSelectElement).value - 1;
-    const date = new Date(this.currentDate);
+    const currentDay = this.currentDate.getDate();
+    const targetDate = new Date(this.currentDate.getFullYear(), month, 1);
+    const lastDayOfTargetMonth = getLastOfMonth(targetDate).getDate();
+    const clampedDay = Math.min(currentDay, lastDayOfTargetMonth);
+    const updatedDate = new Date(
+      this.currentDate.getFullYear(),
+      month,
+      clampedDay
+    );
 
-    date.setMonth(month);
-
-    this.updateCurrentDate(date);
+    this.updateCurrentDate(updatedDate);
   };
 
   private onYearSelect = (event: Event) => {
@@ -470,11 +476,19 @@ export class WCDatepicker {
       input.value = String(year);
     }
 
-    const date = new Date(this.currentDate);
+    const currentDay = this.currentDate.getDate();
+    const currentMonth = this.currentDate.getMonth();
+    const targetDate = new Date();
 
-    date.setFullYear(year);
+    targetDate.setFullYear(year, currentMonth, 1);
 
-    this.updateCurrentDate(date);
+    const lastDayOfTargetMonth = getLastOfMonth(targetDate).getDate();
+    const clampedDay = Math.min(currentDay, lastDayOfTargetMonth);
+    const updatedDate = new Date();
+
+    updatedDate.setFullYear(year, currentMonth, clampedDay);
+
+    this.updateCurrentDate(updatedDate);
   };
 
   private onKeyDown = (event: KeyboardEvent) => {
