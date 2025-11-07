@@ -1,5 +1,11 @@
 # wc-datepicker
 
+## 0.9.2
+
+### Patch Changes
+
+- [`b0b86c1`](https://github.com/Sqrrl/wc-datepicker/commit/b0b86c17401541a5c2f73c0b73397e3363f2820a) Thanks [@Sqrrl](https://github.com/Sqrrl)! - Fix an issue preventing a user to change the month or year
+
 ## 0.9.1
 
 ### Patch Changes
