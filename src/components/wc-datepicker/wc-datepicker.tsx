@@ -820,7 +820,9 @@ export class WCDatepicker {
                           <td
                             aria-disabled={String(isDisabled)}
                             aria-selected={isSelected ? 'true' : undefined}
-                            aria-current={isToday ? 'date' : undefined}
+                            aria-current={
+                              isToday ? 'date' : isSelected ? 'true' : undefined
+                            }
                             class={className}
                             data-date={getISODateString(day)}
                             key={cellKey}
@@ -838,7 +840,8 @@ export class WCDatepicker {
                             <span class="visually-hidden">
                               {Intl.DateTimeFormat(this.locale, {
                                 day: 'numeric',
-                                month: 'long'
+                                month: 'long',
+                                year: 'numeric'
                               }).format(day)}
                             </span>
                           </td>
