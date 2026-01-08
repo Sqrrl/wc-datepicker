@@ -1,5 +1,11 @@
 # wc-datepicker
 
+## 0.9.3
+
+### Patch Changes
+
+- [`9ea45dd`](https://github.com/Sqrrl/wc-datepicker/commit/9ea45dd00199764396d19d47d2d19b5de9fd09b5) Thanks [@Sqrrl](https://github.com/Sqrrl)! - Let screen readers announce the year when navigating date cells; fix an issue causing VoiceOver to not announce the currently selected date when focused.
+
 ## 0.9.2
 
 ### Patch Changes
