@@ -820,6 +820,12 @@ export class WCDatepicker {
                           <td
                             aria-disabled={String(isDisabled)}
                             aria-selected={isSelected ? 'true' : undefined}
+                            /**
+                             * MacOS VoiceOver has a known issue with
+                             * announcing aria-selected on gridcells. We are
+                             * setting aria-current as a workaround to make
+                             * sure selected dates are announced.
+                             */
                             aria-current={
                               isToday ? 'date' : isSelected ? 'true' : undefined
                             }
