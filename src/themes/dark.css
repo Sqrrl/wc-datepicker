@@ -230,3 +230,21 @@ wc-datepicker {
   line-height: 1;
   cursor: pointer;
 }
+
+.wc-datepicker--with-descriptions .wc-datepicker__date-content {
+  position: relative;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  height: 42px;
+  white-space: nowrap;
+  width: 35px;
+}
+
+.wc-datepicker--with-descriptions .wc-datepicker__date-description {
+  font-size: 8px;
+  position: absolute;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+  top: 30px;
+}
