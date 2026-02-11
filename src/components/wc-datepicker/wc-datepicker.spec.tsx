@@ -644,4 +644,31 @@ describe('wc-datepicker', () => {
 
     expect(component['hoveredDate']).toBeUndefined();
   });
+
+  it('updates current date on focus event', async () => {
+    const page = await newSpecPage({
+      components: [WCDatepicker],
+      html: `<wc-datepicker start-date="2022-01-01"></wc-datepicker>`,
+      language: 'en'
+    });
+
+    await page.waitForChanges();
+
+    const component = page.rootInstance as WCDatepicker;
+    const initialCurrentDate = component['currentDate'];
+
+    expect(initialCurrentDate.toISOString()).toContain('2022-01-01');
+
+    const mockTarget = {
+      dataset: { date: '2022-01-15' }
+    };
+
+    const mockEvent = { target: mockTarget } as unknown as FocusEvent;
+
+    component['onFocus'](mockEvent);
+    await page.waitForChanges();
+
+    expect(component['currentDate']).toBeDefined();
+    expect(component['currentDate'].toISOString()).toContain('2022-01-15');
+  });
 });
