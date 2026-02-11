@@ -4,7 +4,7 @@
 
 ### Patch Changes
 
-- [`9df4fca`](https://github.com/Sqrrl/wc-datepicker/commit/9df4fca6f886669470fb2f73b6185c4ae04eb4c1) Thanks [@Sqrrl](https://github.com/Sqrrl)! - Fix focus handling issue in AT browse mode
+- [`9df4fca`](https://github.com/Sqrrl/wc-datepicker/commit/9df4fca6f886669470fb2f73b6185c4ae04eb4c1) Thanks [@boycarper](https://github.com/boycarper)! - Fix focus handling issue in AT browse mode
 
 ## 0.9.3
 
