@@ -582,6 +582,14 @@ export class WCDatepicker {
     this.hoveredDate = undefined;
   };
 
+  private onFocus = (event: FocusEvent) => {
+    const date = new Date((event.target as HTMLElement).dataset.date);
+
+    if (!isSameDay(date, this.currentDate)) {
+      this.updateCurrentDate(date);
+    }
+  };
+
   render() {
     const showFooter = this.showTodayButton || this.showClearButton;
 
@@ -835,6 +843,7 @@ export class WCDatepicker {
                             onClick={this.onClick}
                             onMouseEnter={this.onMouseEnter}
                             onMouseLeave={this.onMouseLeave}
+                            onFocus={this.onFocus}
                             role="gridcell"
                             tabIndex={
                               isSameDay(day, this.currentDate) && !this.disabled
