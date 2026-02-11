@@ -585,10 +585,10 @@ export class WCDatepicker {
   private onFocus = (event: FocusEvent) => {
     const date = new Date((event.target as HTMLElement).dataset.date);
 
-    if(date !== this.currentDate) {
+    if (!isSameDay(date, this.currentDate)) {
       this.updateCurrentDate(date);
     }
-  }
+  };
 
   render() {
     const showFooter = this.showTodayButton || this.showClearButton;
