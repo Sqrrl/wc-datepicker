@@ -583,7 +583,7 @@ export class WCDatepicker {
   };
 
   private onFocus = (event: FocusEvent) => {
-    const date = new Date((event.target as HTMLElement).dataset.date);
+    const date = removeTimezoneOffset(new Date((event.target as HTMLElement).dataset.date));
 
     if (!isSameDay(date, this.currentDate)) {
       this.updateCurrentDate(date);
