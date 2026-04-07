@@ -11,5 +11,5 @@
 .wc-datepicker__previous-month-button--disabled,
 .wc-datepicker__next-month-button--disabled {
     opacity: 0.5;
-    cursor: default;
+    cursor: not-allowed;
 }
