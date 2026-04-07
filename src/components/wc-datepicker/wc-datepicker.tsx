@@ -653,6 +653,26 @@ export class WCDatepicker {
     }
   };
 
+  private get isPreviousMonthDisabled(): boolean {
+    if (!this.minDate) return;
+
+    const prevMonth = getPreviousMonth(this.currentDate);
+    const min = removeTimezoneOffset(new Date(this.minDate));
+
+    // If the last day of the previous month is before minDate, disable the month navigation button.
+    return getLastOfMonth(prevMonth) < min;
+  }
+
+  private get isNextMonthDisabled(): boolean {
+    if (!this.maxDate) return;
+
+    const nextMonth = getNextMonth(this.currentDate);
+    const max = removeTimezoneOffset(new Date(this.maxDate));
+
+    // If the first day of the next month is after maxDate, disable.
+    return getFirstOfMonth(nextMonth) > max;
+  }
+
   render() {
     const showFooter = this.showTodayButton || this.showClearButton;
 
@@ -698,8 +718,12 @@ export class WCDatepicker {
             {this.showMonthStepper && (
               <button
                 aria-label={this.labels.previousMonthButton}
-                class={this.getClassName('previous-month-button')}
-                disabled={this.disabled}
+                class={{
+                  [this.getClassName('previous-month-button')]: true,
+                  [this.getClassName('next-month-button--disabled')]:
+                    this.isPreviousMonthDisabled
+                }}
+                disabled={this.disabled || this.isPreviousMonthDisabled}
                 innerHTML={this.previousMonthButtonContent || undefined}
                 onClick={this.previousMonth}
                 type="button"
@@ -752,8 +776,12 @@ export class WCDatepicker {
             {this.showMonthStepper && (
               <button
                 aria-label={this.labels.nextMonthButton}
-                class={this.getClassName('next-month-button')}
-                disabled={this.disabled}
+                class={{
+                  [this.getClassName('next-month-button')]: true,
+                  [this.getClassName('next-month-button--disabled')]:
+                    this.isNextMonthDisabled
+                }}
+                disabled={this.disabled || this.isNextMonthDisabled}
                 innerHTML={this.nextMonthButtonContent || undefined}
                 onClick={this.nextMonth}
                 type="button"
