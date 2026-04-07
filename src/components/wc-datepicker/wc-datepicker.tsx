@@ -478,12 +478,6 @@ export class WCDatepicker {
     ) {
       return;
     }
-    console.log('Date', date);
-    console.log('minDate', this.minDate);
-    console.log(
-      'True/False',
-      date < removeTimezoneOffset(new Date(this.minDate))
-    );
     this.updateCurrentDate(date);
     this.onSelectDate(date);
   };
