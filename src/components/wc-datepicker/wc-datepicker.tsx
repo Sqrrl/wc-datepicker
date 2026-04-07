@@ -91,6 +91,8 @@ export class WCDatepicker {
   @Prop({ mutable: true }) value?: Date | Date[];
   @Prop() maxSearchDays?: number = 365;
   @Prop() goToRangeStartOnSelect?: boolean = true;
+  @Prop() minDate?: string;
+  @Prop() maxDate?: string;
 
   @State() currentDate: Date;
   @State() hoveredDate: Date;
@@ -146,6 +148,30 @@ export class WCDatepicker {
           : this.value[0];
     } else if (this.value instanceof Date) {
       this.currentDate = this.value;
+    }
+  }
+
+  @Watch('minDate')
+  watchMinDate() {
+    // If currentDate is less than minDate,
+    // snap forward to minDate
+    if (
+      this.minDate &&
+      this.currentDate < removeTimezoneOffset(new Date(this.minDate))
+    ) {
+      this.currentDate = removeTimezoneOffset(new Date(this.minDate));
+    }
+  }
+
+  @Watch('maxDate')
+  watchMaxDate() {
+    // If currentDate is more than maxDate,
+    // snap back to maxDate
+    if (
+      this.maxDate &&
+      this.currentDate > removeTimezoneOffset(new Date(this.maxDate))
+    ) {
+      this.currentDate = removeTimezoneOffset(new Date(this.maxDate));
     }
   }
 
@@ -445,6 +471,19 @@ export class WCDatepicker {
 
     const date = removeTimezoneOffset(new Date(target.dataset.date));
 
+    // Guard against clicking outside the minDate & maxDate range
+    if (
+      (this.minDate && date < removeTimezoneOffset(new Date(this.minDate))) ||
+      (this.maxDate && date > removeTimezoneOffset(new Date(this.maxDate)))
+    ) {
+      return;
+    }
+    console.log('Date', date);
+    console.log('minDate', this.minDate);
+    console.log(
+      'True/False',
+      date < removeTimezoneOffset(new Date(this.minDate))
+    );
     this.updateCurrentDate(date);
     this.onSelectDate(date);
   };
@@ -565,7 +604,18 @@ export class WCDatepicker {
       );
     } else if (event.code === 'Space' || event.code === 'Enter') {
       event.preventDefault();
-      this.onSelectDate(this.currentDate);
+
+      // Prevent keyboard selection of out of range disabled dates for min/max
+      const isBeforeMin = this.minDate
+        ? this.currentDate < removeTimezoneOffset(new Date(this.minDate))
+        : false;
+      const isAfterMax = this.maxDate
+        ? this.currentDate > removeTimezoneOffset(new Date(this.maxDate))
+        : false;
+
+      if (!isBeforeMin && !isAfterMax && !this.disableDate(this.currentDate)) {
+        this.onSelectDate(this.currentDate);
+      }
     }
   };
 
@@ -812,7 +862,17 @@ export class WCDatepicker {
 
                         const isToday = isSameDay(day, new Date());
 
-                        const isDisabled = this.disableDate(day);
+                        // Any day out of range from the min/max bounds is set to disabled.
+                        const isBeforeMin = this.minDate
+                          ? day < removeTimezoneOffset(new Date(this.minDate))
+                          : false;
+
+                        const isAfterMax = this.maxDate
+                          ? day > removeTimezoneOffset(new Date(this.maxDate))
+                          : false;
+
+                        const isDisabled =
+                          this.disableDate(day) || isBeforeMin || isAfterMax;
 
                         const cellKey = `cell-${day.getMonth()}-${day.getDate()}`;
 

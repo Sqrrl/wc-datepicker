@@ -16,7 +16,9 @@ export namespace Components {
         "goToRangeStartOnSelect"?: boolean;
         "labels"?: WCDatepickerLabels;
         "locale"?: string;
+        "maxDate"?: string;
         "maxSearchDays"?: number;
+        "minDate"?: string;
         "nextMonthButtonContent"?: string;
         "nextYearButtonContent"?: string;
         "previousMonthButtonContent"?: string;
@@ -56,7 +58,9 @@ declare namespace LocalJSX {
         "goToRangeStartOnSelect"?: boolean;
         "labels"?: WCDatepickerLabels;
         "locale"?: string;
+        "maxDate"?: string;
         "maxSearchDays"?: number;
+        "minDate"?: string;
         "nextMonthButtonContent"?: string;
         "nextYearButtonContent"?: string;
         "onChangeMonth"?: (event: WcDatepickerCustomEvent<MonthChangedEventDetails>) => void;
