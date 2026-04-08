@@ -100,6 +100,7 @@ export class WCDatepicker {
   @Event() changeMonth: EventEmitter<MonthChangedEventDetails>;
 
   private moveFocusAfterMonthChanged: Boolean;
+  private pendingClick: boolean = false;
 
   componentWillLoad() {
     this.init();
@@ -432,6 +433,8 @@ export class WCDatepicker {
       return;
     }
 
+    this.pendingClick = false;
+
     const target = (event.target as HTMLElement).closest<HTMLElement>(
       '[data-date]'
     );
@@ -582,8 +585,18 @@ export class WCDatepicker {
     this.hoveredDate = undefined;
   };
 
+  private onMouseDown = () => {
+    this.pendingClick = true;
+  };
+
   private onFocus = (event: FocusEvent) => {
-    const date = new Date((event.target as HTMLElement).dataset.date);
+    if (this.pendingClick) {
+      return;
+    }
+
+    const date = removeTimezoneOffset(
+      new Date((event.target as HTMLElement).dataset.date)
+    );
 
     if (!isSameDay(date, this.currentDate)) {
       this.updateCurrentDate(date);
@@ -839,6 +852,7 @@ export class WCDatepicker {
                             data-date={getISODateString(day)}
                             key={cellKey}
                             onClick={this.onClick}
+                            onMouseDown={this.onMouseDown}
                             onMouseEnter={this.onMouseEnter}
                             onMouseLeave={this.onMouseLeave}
                             onFocus={this.onFocus}
