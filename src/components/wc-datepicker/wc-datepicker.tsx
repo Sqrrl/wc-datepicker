@@ -661,7 +661,6 @@ export class WCDatepicker {
                 aria-label={this.labels.monthSelect}
                 class={this.getClassName('month-select')}
                 disabled={this.disabled}
-                name="month"
                 onChange={this.onMonthSelect}
               >
                 {getMonths(this.locale).map((month, index) => (
@@ -682,7 +681,6 @@ export class WCDatepicker {
                 max={9999}
                 maxLength={4}
                 min={1}
-                name="year"
                 onChange={this.onYearSelect}
                 type="number"
                 value={this.currentDate.getFullYear()}
