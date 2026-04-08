@@ -13,8 +13,10 @@ import {
   addDays,
   getDaysOfMonth,
   getFirstOfMonth,
+  getFirstOfWeek,
   getISODateString,
   getLastOfMonth,
+  getLastOfWeek,
   getMonth,
   getMonths,
   getNextDay,
@@ -91,6 +93,7 @@ export class WCDatepicker {
   @Prop({ mutable: true }) value?: Date | Date[];
   @Prop() maxSearchDays?: number = 365;
   @Prop() goToRangeStartOnSelect?: boolean = true;
+  @Prop() navigateWeeks?: boolean = false;
 
   @State() currentDate: Date;
   @State() hoveredDate: Date;
@@ -315,6 +318,8 @@ export class WCDatepicker {
       | 'nextDay'
       | 'previousSameWeekDay'
       | 'nextSameWeekDay'
+      | 'firstOfWeek'
+      | 'lastOfWeek'
       | 'firstOfMonth'
       | 'lastOfMonth'
       | 'previousMonth'
@@ -337,6 +342,12 @@ export class WCDatepicker {
         break;
       case 'nextSameWeekDay':
         potentialDate = addDays(date, 7);
+        break;
+      case 'firstOfWeek':
+        potentialDate = getFirstOfWeek(date, this.firstDayOfWeek);
+        break;
+      case 'lastOfWeek':
+        potentialDate = getLastOfWeek(date, this.firstDayOfWeek);
         break;
       case 'firstOfMonth':
         potentialDate = getFirstOfMonth(date);
@@ -361,10 +372,12 @@ export class WCDatepicker {
     while (this.disableDate(potentialDate) && !outOfRange) {
       switch (direction) {
         case 'previousDay':
+        case 'lastOfWeek':
         case 'lastOfMonth':
           potentialDate = getPreviousDay(potentialDate);
           break;
         case 'nextDay':
+        case 'firstOfWeek':
         case 'firstOfMonth':
         case 'previousMonth':
         case 'nextMonth':
@@ -558,13 +571,13 @@ export class WCDatepicker {
     } else if (event.code === 'Home') {
       event.preventDefault();
       this.updateCurrentDate(
-        this.getAvailableDate(this.currentDate, 'firstOfMonth'),
+        this.getAvailableDate(this.currentDate, this.navigateWeeks ? 'firstOfWeek' : 'firstOfMonth'),
         true
       );
     } else if (event.code === 'End') {
       event.preventDefault();
       this.updateCurrentDate(
-        this.getAvailableDate(this.currentDate, 'lastOfMonth'),
+        this.getAvailableDate(this.currentDate, this.navigateWeeks ? 'lastOfWeek' : 'lastOfMonth'),
         true
       );
     } else if (event.code === 'Space' || event.code === 'Enter') {

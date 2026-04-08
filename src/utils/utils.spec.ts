@@ -2,8 +2,10 @@ import {
   addDays,
   getDaysOfMonth,
   getFirstOfMonth,
+  getFirstOfWeek,
   getISODateString,
   getLastOfMonth,
+  getLastOfWeek,
   getMonth,
   getMonths,
   getNextDay,
@@ -29,6 +31,26 @@ describe('format', () => {
     );
     expect(addDays(new Date('2022-01-01'), -1)).toEqual(new Date('2021-12-31'));
   });
+
+  it('returns first day of week', () => {
+    expect(getFirstOfWeek(new Date('2026-04-08'), 0)).toEqual(new Date('2026-04-05'));
+    expect(getFirstOfWeek(new Date('2026-04-08'), 1)).toEqual(new Date('2026-04-06'));
+    expect(getFirstOfWeek(new Date('2026-04-08'), 2)).toEqual(new Date('2026-04-07'));
+    expect(getFirstOfWeek(new Date('2026-04-08'), 3)).toEqual(new Date('2026-04-08'));
+    expect(getFirstOfWeek(new Date('2026-04-08'), 4)).toEqual(new Date('2026-04-02'));
+    expect(getFirstOfWeek(new Date('2026-04-08'), 5)).toEqual(new Date('2026-04-03'));
+    expect(getFirstOfWeek(new Date('2026-04-08'), 6)).toEqual(new Date('2026-04-04'));
+  })
+
+  it('returns last day of week', () => {
+    expect(getLastOfWeek(new Date('2026-04-08'), 0)).toEqual(new Date('2026-04-11'));
+    expect(getLastOfWeek(new Date('2026-04-08'), 1)).toEqual(new Date('2026-04-12'));
+    expect(getLastOfWeek(new Date('2026-04-08'), 2)).toEqual(new Date('2026-04-13'));
+    expect(getLastOfWeek(new Date('2026-04-08'), 3)).toEqual(new Date('2026-04-14'));
+    expect(getLastOfWeek(new Date('2026-04-08'), 4)).toEqual(new Date('2026-04-08'));
+    expect(getLastOfWeek(new Date('2026-04-08'), 5)).toEqual(new Date('2026-04-09'));
+    expect(getLastOfWeek(new Date('2026-04-08'), 6)).toEqual(new Date('2026-04-10'));
+  })
 
   it('returns (padded) days of month', () => {
     const expected = new Array(31)
