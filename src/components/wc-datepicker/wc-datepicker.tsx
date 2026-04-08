@@ -225,6 +225,13 @@ export class WCDatepicker {
     }
   }
 
+  private getGridTitle() {
+    return Intl.DateTimeFormat(this.locale, {
+      month: 'long',
+      year: 'numeric'
+    }).format(this.currentDate);
+  }
+
   private focusDate(date: Date) {
     this.el
       .querySelector<HTMLTableCellElement>(
@@ -742,6 +749,7 @@ export class WCDatepicker {
               class={this.getClassName('calendar')}
               onKeyDown={this.onKeyDown}
               role="grid"
+              aria-label={this.getGridTitle()}
               aria-multiselectable={this.range ? "true" : "false"}
             >
               <thead class={this.getClassName('calendar-header')}>
