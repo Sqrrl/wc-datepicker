@@ -478,6 +478,21 @@ defineCustomElements();</code></pre>
                 months.
               </td>
             </tr>
+            <tr id="navigate-weeks">
+              <td><code>navigate-weeks</code></td>
+              <td><code>boolean</code></td>
+              <td><code>false</code></td>
+              <td>
+                Controls how pressing <kbd>Home</kbd> or <kbd>End</kbd> changes
+                the selected date. When <code>navigate-weeks</code> is set to
+                <code>true</code>, focus is shifted to the first or last day of
+                the <em>week</em>. When it is set to <code>false</code>, focus
+                is shifted to the first or last day of the <em>month</em>.<br />
+                Setting this to <code>true</code> adheres to the <a
+                href="https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/examples/datepicker-dialog/"
+                target="_blank">APG's Date Picker Dialog Example</a>.
+              </td>
+            </tr>
           </tbody>
         </table>
 
@@ -771,13 +786,17 @@ defineCustomElements();</code></pre>
               <td>
                 <kbd>Home</kbd>
               </td>
-              <td>Move cursor to first day of the month.</td>
+              <td>Move cursor to first day of the month or week, see <a
+                href="#navigate-weeks"><code>navigate-weeks</code></a>.
+              </td>
             </tr>
             <tr>
               <td>
                 <kbd>End</kbd>
               </td>
-              <td>Move cursor to last day of the month.</td>
+              <td>Move cursor to last day of the month or week, see <a
+                href="#navigate-weeks"><code>navigate-weeks</code></a>.
+              </td>
             </tr>
           </tbody>
         </table>
