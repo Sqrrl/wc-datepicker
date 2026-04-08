@@ -1,5 +1,13 @@
 # wc-datepicker
 
+## 0.9.5
+
+### Patch Changes
+
+- [`c84161a`](https://github.com/Sqrrl/wc-datepicker/commit/c84161a179ea70e08fab09bd230f6a4ffee141e8) Thanks [@Sqrrl](https://github.com/Sqrrl)! - Fix selection of overflow dates via click
+
+- [`3ed811e`](https://github.com/Sqrrl/wc-datepicker/commit/3ed811ebe4de1bfc7b0fbd025ed5d79b4c81a08c) Thanks [@Sqrrl](https://github.com/Sqrrl)! - Remove name attributes from navigational month and year inputs
+
 ## 0.9.4
 
 ### Patch Changes
