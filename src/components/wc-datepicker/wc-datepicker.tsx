@@ -742,6 +742,7 @@ export class WCDatepicker {
               class={this.getClassName('calendar')}
               onKeyDown={this.onKeyDown}
               role="grid"
+              aria-multiselectable={this.range ? "true" : "false"}
             >
               <thead class={this.getClassName('calendar-header')}>
                 <tr class={this.getClassName('weekday-row')}>
