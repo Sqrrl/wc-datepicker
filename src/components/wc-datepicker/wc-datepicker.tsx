@@ -291,7 +291,7 @@ export class WCDatepicker {
   }
 
   private onSelectDate(date: Date) {
-    if (this.disableDate(date)) {
+    if (this.isDateDisabled(date)) {
       return;
     }
 
@@ -468,13 +468,7 @@ export class WCDatepicker {
 
     const date = removeTimezoneOffset(new Date(target.dataset.date));
 
-    // Guard against clicking outside the minDate & maxDate range
-    if (
-      (this.minDate && date < removeTimezoneOffset(new Date(this.minDate))) ||
-      (this.maxDate && date > removeTimezoneOffset(new Date(this.maxDate)))
-    ) {
-      return;
-    }
+    if (this.isDateDisabled(date)) return;
     this.updateCurrentDate(date);
     this.onSelectDate(date);
   };
@@ -597,14 +591,7 @@ export class WCDatepicker {
       event.preventDefault();
 
       // Prevent keyboard selection of out of range disabled dates for min/max
-      const isBeforeMin = this.minDate
-        ? this.currentDate < removeTimezoneOffset(new Date(this.minDate))
-        : false;
-      const isAfterMax = this.maxDate
-        ? this.currentDate > removeTimezoneOffset(new Date(this.maxDate))
-        : false;
-
-      if (!isBeforeMin && !isAfterMax && !this.disableDate(this.currentDate)) {
+      if (!this.isDateDisabled(this.currentDate)) {
         this.onSelectDate(this.currentDate);
       }
     }
@@ -654,6 +641,15 @@ export class WCDatepicker {
 
     // If the first day of the next month is after maxDate, disable.
     return getFirstOfMonth(nextMonth) > max;
+  }
+
+  private isDateDisabled(date: Date): boolean {
+    if (this.disableDate(date)) return true;
+    if (this.minDate && date < removeTimezoneOffset(new Date(this.minDate)))
+      return true;
+    if (this.maxDate && date > removeTimezoneOffset(new Date(this.maxDate)))
+      return true;
+    return false;
   }
 
   render() {
@@ -875,17 +871,7 @@ export class WCDatepicker {
 
                         const isToday = isSameDay(day, new Date());
 
-                        // Any day out of range from the min/max bounds is set to disabled.
-                        const isBeforeMin = this.minDate
-                          ? day < removeTimezoneOffset(new Date(this.minDate))
-                          : false;
-
-                        const isAfterMax = this.maxDate
-                          ? day > removeTimezoneOffset(new Date(this.maxDate))
-                          : false;
-
-                        const isDisabled =
-                          this.disableDate(day) || isBeforeMin || isAfterMax;
+                        const isDisabled = this.isDateDisabled(day);
 
                         const cellKey = `cell-${day.getMonth()}-${day.getDate()}`;
 
