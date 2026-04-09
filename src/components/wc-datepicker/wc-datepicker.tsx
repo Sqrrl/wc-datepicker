@@ -648,7 +648,7 @@ export class WCDatepicker {
   };
 
   private get isPreviousMonthDisabled(): boolean {
-    if (!this.minDate) return;
+    if (!this.minDate) return false;
 
     const prevMonth = getPreviousMonth(this.currentDate);
     const min = removeTimezoneOffset(new Date(this.minDate));
@@ -658,7 +658,7 @@ export class WCDatepicker {
   }
 
   private get isNextMonthDisabled(): boolean {
-    if (!this.maxDate) return;
+    if (!this.maxDate) return false;
 
     const nextMonth = getNextMonth(this.currentDate);
     const max = removeTimezoneOffset(new Date(this.maxDate));
