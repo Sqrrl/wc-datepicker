@@ -4,7 +4,7 @@
 
 ### Minor Changes
 
-- [`499874d`](https://github.com/Sqrrl/wc-datepicker/commit/499874df7ea680ebd9272d1dd5cf7e35692f0a26) Thanks [@Sqrrl](https://github.com/Sqrrl)! - Add min-date and max-date attributes
+- [`499874d`](https://github.com/Sqrrl/wc-datepicker/commit/499874df7ea680ebd9272d1dd5cf7e35692f0a26) Thanks [@NovaCat35](https://github.com/NovaCat35)! - Add min-date and max-date attributes
 
 ## 0.9.5
 
