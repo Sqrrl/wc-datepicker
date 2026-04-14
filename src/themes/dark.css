@@ -117,6 +117,12 @@ wc-datepicker {
   cursor: pointer;
 }
 
+.wc-datepicker__previous-month-button--disabled,
+.wc-datepicker__next-month-button--disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
 .wc-datepicker__body {
   padding-right: 0.75rem;
   padding-bottom: 0.75rem;

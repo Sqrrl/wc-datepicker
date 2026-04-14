@@ -258,6 +258,34 @@
                   </td>
                 </tr>
                 <tr>
+                  <td>
+                    <code id="min-date-label">min-date</code><br />
+                    <small>The minimum date that can be selected</small>
+                  </td>
+                  <td>
+                    <input
+                      aria-labelledby="min-date-label"
+                      id="min-date"
+                      type="text"
+                      placeholder="YYYY-MM-DD"
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <code id="max-date-label">max-date</code><br />
+                    <small>The maximum date that can be selected</small>
+                  </td>
+                  <td>
+                    <input
+                      aria-labelledby="max-date-label"
+                      id="max-date"
+                      type="text"
+                      placeholder="YYYY-MM-DD"
+                    />
+                  </td>
+                </tr>
+                <tr>
                   <td><code id="value-label">value</code><br /></td>
                   <td>
                     <input
@@ -426,6 +454,24 @@ defineCustomElements();</code></pre>
               <td>BCP 47 locale string used to format dates.</td>
             </tr>
             <tr>
+              <td><code>max-date</code></td>
+              <td><code>string</code></td>
+              <td><code>undefined</code></td>
+              <td>
+                The maximum date that can be selected (in
+                <code>YYYY-MM-DD</code> format).
+              </td>
+            </tr>
+            <tr>
+              <td><code>min-date</code></td>
+              <td><code>string</code></td>
+              <td><code>undefined</code></td>
+              <td>
+                The minimum date that can be selected (in
+                <code>YYYY-MM-DD</code> format).
+              </td>
+            </tr>
+            <tr>
               <td><code>show-clear-button</code></td>
               <td><code>boolean</code></td>
               <td><code>false</code></td>
@@ -518,7 +564,10 @@ defineCustomElements();</code></pre>
             <tr>
               <td>changeMonth</td>
               <td>
-                <code>CustomEvent&lt;{ month: number; year: number; day: number }&gt;</code>
+                <code
+                  >CustomEvent&lt;{ month: number; year: number; day: number
+                  }&gt;</code
+                >
               </td>
               <td>Fired when the displayed month or year changes.</td>
             </tr>
@@ -812,6 +861,8 @@ defineCustomElements();</code></pre>
       const showTodayButtonInput = document.getElementById('show-today-button');
       const showYearStepperInput = document.getElementById('show-year-stepper');
       const startDateInput = document.getElementById('start-date');
+      const minDateInput = document.getElementById('min-date');
+      const maxDateInput = document.getElementById('max-date');
       const valueInput = document.getElementById('value');
 
       function updateDemoCode() {
@@ -941,6 +992,26 @@ defineCustomElements();</code></pre>
           datepicker.setAttribute('start-date', event.target.value);
         } else {
           datepicker.removeAttribute('start-date');
+        }
+
+        updateDemoCode();
+      });
+
+      minDateInput.addEventListener('change', (event) => {
+        if (event.target.value) {
+          datepicker.setAttribute('min-date', event.target.value);
+        } else {
+          datepicker.removeAttribute('min-date');
+        }
+
+        updateDemoCode();
+      });
+
+      maxDateInput.addEventListener('change', (event) => {
+        if (event.target.value) {
+          datepicker.setAttribute('max-date', event.target.value);
+        } else {
+          datepicker.removeAttribute('max-date');
         }
 
         updateDemoCode();
