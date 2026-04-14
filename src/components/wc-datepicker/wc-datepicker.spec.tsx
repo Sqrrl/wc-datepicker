@@ -671,4 +671,326 @@ describe('wc-datepicker', () => {
     expect(component['currentDate']).toBeDefined();
     expect(component['currentDate'].toISOString()).toContain('2022-01-15');
   });
+
+  it('disables dates before minDate', async () => {
+    const page = await newSpecPage({
+      components: [WCDatepicker],
+      html: `<wc-datepicker start-date="2022-01-15" min-date="2022-01-10"></wc-datepicker>`,
+      language: 'en'
+    });
+
+    await page.waitForChanges();
+
+    const jan5 = Array.from(
+      page.root.querySelectorAll<HTMLTableCellElement>('.wc-datepicker__date')
+    ).find((el) => el.dataset.date === '2022-01-05');
+
+    const jan15 = Array.from(
+      page.root.querySelectorAll<HTMLTableCellElement>('.wc-datepicker__date')
+    ).find((el) => el.dataset.date === '2022-01-15');
+
+    expect(jan5.getAttribute('aria-disabled')).toBe('true');
+    expect(jan15.getAttribute('aria-disabled')).toBe('false');
+  });
+
+  it('disables dates after maxDate', async () => {
+    const page = await newSpecPage({
+      components: [WCDatepicker],
+      html: `<wc-datepicker start-date="2022-01-15" max-date="2022-01-20"></wc-datepicker>`,
+      language: 'en'
+    });
+
+    await page.waitForChanges();
+
+    const jan25 = Array.from(
+      page.root.querySelectorAll<HTMLTableCellElement>('.wc-datepicker__date')
+    ).find((el) => el.dataset.date === '2022-01-25');
+
+    const jan15 = Array.from(
+      page.root.querySelectorAll<HTMLTableCellElement>('.wc-datepicker__date')
+    ).find((el) => el.dataset.date === '2022-01-15');
+
+    expect(jan25.getAttribute('aria-disabled')).toBe('true');
+    expect(jan15.getAttribute('aria-disabled')).toBe('false');
+  });
+
+  it('prevents selecting a date before minDate via click', async () => {
+    const page = await newSpecPage({
+      components: [WCDatepicker],
+      html: `<wc-datepicker start-date="2022-01-15" min-date="2022-01-10"></wc-datepicker>`,
+      language: 'en'
+    });
+
+    const spy = jest.fn();
+    page.root.addEventListener('selectDate', spy);
+
+    await page.waitForChanges();
+
+    const jan5 = Array.from(
+      page.root.querySelectorAll<HTMLTableCellElement>('.wc-datepicker__date')
+    ).find((el) => el.dataset.date === '2022-01-05');
+
+    jan5.click();
+
+    expect(spy).not.toHaveBeenCalled();
+  });
+
+  it('prevents selecting a date after maxDate via click', async () => {
+    const page = await newSpecPage({
+      components: [WCDatepicker],
+      html: `<wc-datepicker start-date="2022-01-15" max-date="2022-01-20"></wc-datepicker>`,
+      language: 'en'
+    });
+
+    const spy = jest.fn();
+    page.root.addEventListener('selectDate', spy);
+
+    await page.waitForChanges();
+
+    const jan25 = Array.from(
+      page.root.querySelectorAll<HTMLTableCellElement>('.wc-datepicker__date')
+    ).find((el) => el.dataset.date === '2022-01-25');
+
+    jan25.click();
+
+    expect(spy).not.toHaveBeenCalled();
+  });
+
+  it('prevents selecting an out-of-range date via keyboard', async () => {
+    const page = await newSpecPage({
+      components: [WCDatepicker],
+      html: `<wc-datepicker start-date="2022-01-10" min-date="2022-01-10" max-date="2022-01-10"></wc-datepicker>`,
+      language: 'en'
+    });
+
+    const spy = jest.fn();
+    page.root.addEventListener('selectDate', spy);
+
+    await page.waitForChanges();
+
+    triggerKeyDown(page, 'ArrowLeft');
+    triggerKeyDown(page, 'Space');
+
+    expect(spy).not.toHaveBeenCalled();
+
+    triggerKeyDown(page, 'ArrowRight');
+    triggerKeyDown(page, 'ArrowRight');
+    triggerKeyDown(page, 'Enter');
+
+    expect(spy).not.toHaveBeenCalled();
+  });
+
+  it('snaps currentDate forward to minDate when startDate is before minDate', async () => {
+    const page = await newSpecPage({
+      components: [WCDatepicker],
+      html: `<wc-datepicker start-date="2022-01-01" min-date="2022-03-15"></wc-datepicker>`,
+      language: 'en'
+    });
+
+    await page.waitForChanges();
+
+    expect(getSelectedMonth(page)).toBe(3);
+    expect(getSelectedYear(page)).toBe(2022);
+  });
+
+  it('snaps currentDate back to maxDate when startDate is after maxDate', async () => {
+    const page = await newSpecPage({
+      components: [WCDatepicker],
+      html: `<wc-datepicker start-date="2022-06-01" max-date="2022-03-15"></wc-datepicker>`,
+      language: 'en'
+    });
+
+    await page.waitForChanges();
+
+    expect(getSelectedMonth(page)).toBe(3);
+    expect(getSelectedYear(page)).toBe(2022);
+  });
+
+  it('snaps currentDate when minDate prop changes dynamically', async () => {
+    const page = await newSpecPage({
+      components: [WCDatepicker],
+      html: `<wc-datepicker start-date="2022-01-15"></wc-datepicker>`,
+      language: 'en'
+    });
+
+    expect(getSelectedMonth(page)).toBe(1);
+
+    page.root.setAttribute('min-date', '2022-06-01');
+    await page.waitForChanges();
+
+    expect(getSelectedMonth(page)).toBe(6);
+    expect(getSelectedYear(page)).toBe(2022);
+  });
+
+  it('snaps currentDate when maxDate prop changes dynamically', async () => {
+    const page = await newSpecPage({
+      components: [WCDatepicker],
+      html: `<wc-datepicker start-date="2022-06-15"></wc-datepicker>`,
+      language: 'en'
+    });
+
+    expect(getSelectedMonth(page)).toBe(6);
+
+    page.root.setAttribute('max-date', '2022-03-01');
+    await page.waitForChanges();
+
+    expect(getSelectedMonth(page)).toBe(3);
+    expect(getSelectedYear(page)).toBe(2022);
+  });
+
+  it('disables the previous month button when navigating would go below minDate', async () => {
+    const page = await newSpecPage({
+      components: [WCDatepicker],
+      html: `<wc-datepicker start-date="2022-01-15" min-date="2022-01-01"></wc-datepicker>`,
+      language: 'en'
+    });
+
+    await page.waitForChanges();
+
+    const previousMonthButton = page.root.querySelector<HTMLButtonElement>(
+      '.wc-datepicker__previous-month-button'
+    );
+
+    expect(previousMonthButton.hasAttribute('disabled')).toBe(true);
+  });
+
+  it('does not disable the previous month button when previous month contains dates >= minDate', async () => {
+    const page = await newSpecPage({
+      components: [WCDatepicker],
+      html: `<wc-datepicker start-date="2022-02-15" min-date="2022-01-20"></wc-datepicker>`,
+      language: 'en'
+    });
+
+    await page.waitForChanges();
+
+    const previousMonthButton = page.root.querySelector<HTMLButtonElement>(
+      '.wc-datepicker__previous-month-button'
+    );
+
+    expect(previousMonthButton.hasAttribute('disabled')).toBe(false);
+  });
+
+  it('disables the next month button when navigating would go above maxDate', async () => {
+    const page = await newSpecPage({
+      components: [WCDatepicker],
+      html: `<wc-datepicker start-date="2022-01-15" max-date="2022-01-31"></wc-datepicker>`,
+      language: 'en'
+    });
+
+    await page.waitForChanges();
+
+    const nextMonthButton = page.root.querySelector<HTMLButtonElement>(
+      '.wc-datepicker__next-month-button'
+    );
+
+    expect(nextMonthButton.hasAttribute('disabled')).toBe(true);
+  });
+
+  it('does not disable the next month button when next month contains dates <= maxDate', async () => {
+    const page = await newSpecPage({
+      components: [WCDatepicker],
+      html: `<wc-datepicker start-date="2022-01-15" max-date="2022-02-10"></wc-datepicker>`,
+      language: 'en'
+    });
+
+    await page.waitForChanges();
+
+    const nextMonthButton = page.root.querySelector<HTMLButtonElement>(
+      '.wc-datepicker__next-month-button'
+    );
+
+    expect(nextMonthButton.hasAttribute('disabled')).toBe(false);
+  });
+
+  it('works with both minDate and maxDate together', async () => {
+    const page = await newSpecPage({
+      components: [WCDatepicker],
+      html: `<wc-datepicker start-date="2022-01-15" min-date="2022-01-10" max-date="2022-01-20"></wc-datepicker>`,
+      language: 'en'
+    });
+
+    await page.waitForChanges();
+
+    const jan5 = Array.from(
+      page.root.querySelectorAll<HTMLTableCellElement>('.wc-datepicker__date')
+    ).find((el) => el.dataset.date === '2022-01-05');
+
+    const jan15 = Array.from(
+      page.root.querySelectorAll<HTMLTableCellElement>('.wc-datepicker__date')
+    ).find((el) => el.dataset.date === '2022-01-15');
+
+    const jan25 = Array.from(
+      page.root.querySelectorAll<HTMLTableCellElement>('.wc-datepicker__date')
+    ).find((el) => el.dataset.date === '2022-01-25');
+
+    expect(jan5.getAttribute('aria-disabled')).toBe('true');
+    expect(jan15.getAttribute('aria-disabled')).toBe('false');
+    expect(jan25.getAttribute('aria-disabled')).toBe('true');
+
+    const previousMonthButton = page.root.querySelector<HTMLButtonElement>(
+      '.wc-datepicker__previous-month-button'
+    );
+    const nextMonthButton = page.root.querySelector<HTMLButtonElement>(
+      '.wc-datepicker__next-month-button'
+    );
+
+    expect(previousMonthButton.hasAttribute('disabled')).toBe(true);
+    expect(nextMonthButton.hasAttribute('disabled')).toBe(true);
+  });
+
+  it('allows selecting dates on the minDate and maxDate boundaries', async () => {
+    const page = await newSpecPage({
+      components: [WCDatepicker],
+      html: `<wc-datepicker start-date="2022-01-15" min-date="2022-01-10" max-date="2022-01-20"></wc-datepicker>`,
+      language: 'en'
+    });
+
+    const spy = jest.fn();
+    page.root.addEventListener('selectDate', spy);
+
+    await page.waitForChanges();
+
+    const jan10 = Array.from(
+      page.root.querySelectorAll<HTMLTableCellElement>('.wc-datepicker__date')
+    ).find((el) => el.dataset.date === '2022-01-10');
+
+    const jan20 = Array.from(
+      page.root.querySelectorAll<HTMLTableCellElement>('.wc-datepicker__date')
+    ).find((el) => el.dataset.date === '2022-01-20');
+
+    expect(jan10.getAttribute('aria-disabled')).toBe('false');
+    expect(jan20.getAttribute('aria-disabled')).toBe('false');
+
+    jan10.click();
+    expect(spy).toHaveBeenCalledTimes(1);
+    expect(spy.mock.calls[0][0].detail).toBe('2022-01-10');
+
+    jan20.click();
+    expect(spy).toHaveBeenCalledTimes(2);
+    expect(spy.mock.calls[1][0].detail).toBe('2022-01-20');
+  });
+
+  it('combines minDate/maxDate with the disableDate callback', async () => {
+    const page = await newSpecPage({
+      components: [WCDatepicker],
+      html: `<wc-datepicker start-date="2022-01-15" min-date="2022-01-10" max-date="2022-01-20"></wc-datepicker>`,
+      language: 'en'
+    });
+
+    page.root.disableDate = (date: Date) =>
+      getISODateString(date) === '2022-01-15';
+
+    await page.waitForChanges();
+
+    const jan15 = Array.from(
+      page.root.querySelectorAll<HTMLTableCellElement>('.wc-datepicker__date')
+    ).find((el) => el.dataset.date === '2022-01-15');
+
+    const jan9 = Array.from(
+      page.root.querySelectorAll<HTMLTableCellElement>('.wc-datepicker__date')
+    ).find((el) => el.dataset.date === '2022-01-09');
+
+    expect(jan15.getAttribute('aria-disabled')).toBe('true');
+    expect(jan9.getAttribute('aria-disabled')).toBe('true');
+  });
 });
