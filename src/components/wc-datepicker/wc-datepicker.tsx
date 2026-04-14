@@ -75,9 +75,13 @@ export class WCDatepicker {
   @Prop() disableDate?: (date: Date) => boolean = () => false;
   @Prop() elementClassName?: string = 'wc-datepicker';
   @Prop() firstDayOfWeek?: number = 0;
+  @Prop() goToRangeStartOnSelect?: boolean = true;
   @Prop() range?: boolean;
   @Prop() labels?: WCDatepickerLabels = defaultLabels;
   @Prop() locale?: string = navigator?.language || 'en-US';
+  @Prop() maxDate?: string;
+  @Prop() maxSearchDays?: number = 365;
+  @Prop() minDate?: string;
   @Prop() nextMonthButtonContent?: string;
   @Prop() nextYearButtonContent?: string;
   @Prop() previousMonthButtonContent?: string;
@@ -89,10 +93,6 @@ export class WCDatepicker {
   @Prop() startDate?: string = getISODateString(new Date());
   @Prop() todayButtonContent?: string;
   @Prop({ mutable: true }) value?: Date | Date[];
-  @Prop() maxSearchDays?: number = 365;
-  @Prop() goToRangeStartOnSelect?: boolean = true;
-  @Prop() minDate?: string;
-  @Prop() maxDate?: string;
 
   @State() currentDate: Date;
   @State() hoveredDate: Date;
@@ -152,7 +152,7 @@ export class WCDatepicker {
   }
 
   @Watch('minDate')
-  watchMinDate() {
+  handleMinDate() {
     // If currentDate is less than minDate,
     // snap forward to minDate
     if (
@@ -164,7 +164,7 @@ export class WCDatepicker {
   }
 
   @Watch('maxDate')
-  watchMaxDate() {
+  handleMaxDate() {
     // If currentDate is more than maxDate,
     // snap back to maxDate
     if (
@@ -186,7 +186,10 @@ export class WCDatepicker {
     this.currentDate = this.startDate
       ? removeTimezoneOffset(new Date(this.startDate))
       : new Date();
+
     this.updateWeekdays();
+    this.handleMinDate();
+    this.handleMaxDate();
   };
 
   private updateWeekdays() {
@@ -471,7 +474,10 @@ export class WCDatepicker {
 
     const date = removeTimezoneOffset(new Date(target.dataset.date));
 
-    if (this.isDateDisabled(date)) return;
+    if (this.isDateDisabled(date)) {
+      return;
+    }
+
     this.updateCurrentDate(date);
     this.onSelectDate(date);
   };
@@ -635,7 +641,9 @@ export class WCDatepicker {
   };
 
   private get isPreviousMonthDisabled(): boolean {
-    if (!this.minDate) return false;
+    if (!this.minDate) {
+      return false;
+    }
 
     const prevMonth = getPreviousMonth(this.currentDate);
     const min = removeTimezoneOffset(new Date(this.minDate));
@@ -645,7 +653,9 @@ export class WCDatepicker {
   }
 
   private get isNextMonthDisabled(): boolean {
-    if (!this.maxDate) return false;
+    if (!this.maxDate) {
+      return false;
+    }
 
     const nextMonth = getNextMonth(this.currentDate);
     const max = removeTimezoneOffset(new Date(this.maxDate));
@@ -655,11 +665,19 @@ export class WCDatepicker {
   }
 
   private isDateDisabled(date: Date): boolean {
-    if (this.disableDate(date)) return true;
-    if (this.minDate && date < removeTimezoneOffset(new Date(this.minDate)))
+    if (this.disableDate(date)) {
       return true;
-    if (this.maxDate && date > removeTimezoneOffset(new Date(this.maxDate)))
+    }
+
+    const isBeforeMin =
+      this.minDate && date < removeTimezoneOffset(new Date(this.minDate));
+    const isAfterMax =
+      this.maxDate && date > removeTimezoneOffset(new Date(this.maxDate));
+
+    if (isBeforeMin || isAfterMax) {
       return true;
+    }
+
     return false;
   }
 
