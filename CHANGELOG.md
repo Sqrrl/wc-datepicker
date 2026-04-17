@@ -1,5 +1,21 @@
 # wc-datepicker
 
+## 0.11.0
+
+### Minor Changes
+
+- [#68](https://github.com/Sqrrl/wc-datepicker/pull/68) [`8ad11c5`](https://github.com/Sqrrl/wc-datepicker/commit/8ad11c58df947d891b5a07268b6a2e4d21709dbd) Thanks [@babielmam](https://github.com/babielmam)! - Add slots for buttons' content (customizability)
+
+  > **Note**: The undocumented props `todayButtonContent` and `clearButtonContent` have been removed in favor of the new slots.
+
+- [#67](https://github.com/Sqrrl/wc-datepicker/pull/67) [`dabc33e`](https://github.com/Sqrrl/wc-datepicker/commit/dabc33ee4dac7a4aa0bef8440689a2082c67bd8b) Thanks [@babielmam](https://github.com/babielmam)! - Add property to shift focus to start or end of week instead of month, when pressing Home or End (accessibility)
+
+### Patch Changes
+
+- [#67](https://github.com/Sqrrl/wc-datepicker/pull/67) [`ee15fc1`](https://github.com/Sqrrl/wc-datepicker/commit/ee15fc1c159b7a7f68bd52b12df5db906730614b) Thanks [@babielmam](https://github.com/babielmam)! - Set `aria-multiselectable` when `range`-option is used (accessibility)
+
+- [#67](https://github.com/Sqrrl/wc-datepicker/pull/67) [`7f8c762`](https://github.com/Sqrrl/wc-datepicker/commit/7f8c762bbeb77e63fd34be433ef1b1bfc940e619) Thanks [@babielmam](https://github.com/babielmam)! - Set `aria-label` on `role=grid` (accessibility)
+
 ## 0.10.0
 
 ### Minor Changes
