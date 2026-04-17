@@ -6,6 +6,22 @@ export function addDays(date: Date, days: number): Date {
   return newDate;
 }
 
+export function getFirstOfWeek(date: Date, firstDayOfWeek: number): Date {
+  let currentDayInWeek = date.getDay() - firstDayOfWeek;
+
+  if (currentDayInWeek < 0) {
+    currentDayInWeek = 7 + currentDayInWeek;
+  }
+
+  return subDays(date, currentDayInWeek);
+}
+
+export function getLastOfWeek(date: Date, firstDayOfWeek: number): Date {
+  const startOfWeek = getFirstOfWeek(date, firstDayOfWeek);
+
+  return addDays(startOfWeek, 6);
+}
+
 export function getDaysOfMonth(
   date: Date,
   padded?: boolean,
