@@ -63,6 +63,14 @@ export interface MonthChangedEventDetails {
   day: number;
 }
 
+/**
+ * @slot button-month-prev - content of the previous month button
+ * @slot button-month-next - content of the next month button
+ * @slot button-year-prev - content of the previous year button
+ * @slot button-year-next - content of the next year button
+ * @slot button-today - content of the today button
+ * @slot button-clear - content of the clear button
+ */
 @Component({
   scoped: true,
   shadow: false,
@@ -72,7 +80,6 @@ export interface MonthChangedEventDetails {
 export class WCDatepicker {
   @Element() el: HTMLElement;
 
-  @Prop() clearButtonContent?: string;
   @Prop() disabled?: boolean = false;
   @Prop() disableDate?: (date: Date) => boolean = () => false;
   @Prop() elementClassName?: string = 'wc-datepicker';
@@ -94,7 +101,6 @@ export class WCDatepicker {
   @Prop() showTodayButton?: boolean = false;
   @Prop() showYearStepper?: boolean = false;
   @Prop() startDate?: string = getISODateString(new Date());
-  @Prop() todayButtonContent?: string;
   @Prop({ mutable: true }) value?: Date | Date[];
 
   @State() currentDate: Date;
@@ -357,7 +363,7 @@ export class WCDatepicker {
       | 'previousYear'
       | 'nextYear'
   ) => {
-    let potentialDate;
+    let potentialDate: Date;
     let outOfRange = false;
 
     switch (direction) {
@@ -734,19 +740,21 @@ export class WCDatepicker {
                 onClick={this.previousYear}
                 type="button"
               >
-                <svg
-                  fill="none"
-                  height="24"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  width="24"
-                >
-                  <polyline points="11 17 6 12 11 7"></polyline>
-                  <polyline points="18 17 13 12 18 7"></polyline>
-                </svg>
+                <slot name="button-year-prev">
+                  <svg
+                    fill="none"
+                    height="24"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    width="24"
+                  >
+                    <polyline points="11 17 6 12 11 7"></polyline>
+                    <polyline points="18 17 13 12 18 7"></polyline>
+                  </svg>
+                </slot>
               </button>
             )}
             {this.showMonthStepper && (
@@ -762,18 +770,20 @@ export class WCDatepicker {
                 onClick={this.previousMonth}
                 type="button"
               >
-                <svg
-                  fill="none"
-                  height="24"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  width="24"
-                >
-                  <polyline points="15 18 9 12 15 6"></polyline>
-                </svg>
+                <slot name="button-month-prev">
+                  <svg
+                    fill="none"
+                    height="24"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    width="24"
+                  >
+                    <polyline points="15 18 9 12 15 6"></polyline>
+                  </svg>
+                </slot>
               </button>
             )}
             <span class={this.getClassName('current-month')}>
@@ -820,18 +830,20 @@ export class WCDatepicker {
                 onClick={this.nextMonth}
                 type="button"
               >
-                <svg
-                  fill="none"
-                  height="24"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  width="24"
-                >
-                  <polyline points="9 18 15 12 9 6"></polyline>
-                </svg>
+                <slot name="button-month-next">
+                  <svg
+                    fill="none"
+                    height="24"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    width="24"
+                  >
+                    <polyline points="9 18 15 12 9 6"></polyline>
+                  </svg>
+                </slot>
               </button>
             )}
             {this.showYearStepper && (
@@ -843,19 +855,21 @@ export class WCDatepicker {
                 onClick={this.nextYear}
                 type="button"
               >
-                <svg
-                  fill="none"
-                  height="24"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  width="24"
-                >
-                  <polyline points="13 17 18 12 13 7"></polyline>
-                  <polyline points="6 17 11 12 6 7"></polyline>
-                </svg>
+                <slot name="button-year-next">
+                  <svg
+                    fill="none"
+                    height="24"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    width="24"
+                  >
+                    <polyline points="13 17 18 12 13 7"></polyline>
+                    <polyline points="6 17 11 12 6 7"></polyline>
+                  </svg>
+                </slot>
               </button>
             )}
           </div>
@@ -1001,22 +1015,20 @@ export class WCDatepicker {
                 <button
                   class={this.getClassName('today-button')}
                   disabled={this.disabled}
-                  innerHTML={this.todayButtonContent || undefined}
                   onClick={this.showToday}
                   type="button"
                 >
-                  {this.labels.todayButton}
+                  <slot name="button-today">{this.labels.todayButton}</slot>
                 </button>
               )}
               {this.showClearButton && (
                 <button
                   class={this.getClassName('clear-button')}
                   disabled={this.disabled}
-                  innerHTML={this.clearButtonContent || undefined}
                   onClick={this.clear}
                   type="button"
                 >
-                  {this.labels.clearButton}
+                  <slot name="button-clear">{this.labels.clearButton}</slot>
                 </button>
               )}
             </div>

@@ -8,7 +8,6 @@ import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { MonthChangedEventDetails, WCDatepickerLabels } from "./components/wc-datepicker/wc-datepicker";
 export namespace Components {
     interface WcDatepicker {
-        "clearButtonContent"?: string;
         "disableDate"?: (date: Date) => boolean;
         "disabled"?: boolean;
         "elementClassName"?: string;
@@ -30,7 +29,6 @@ export namespace Components {
         "showTodayButton"?: boolean;
         "showYearStepper"?: boolean;
         "startDate"?: string;
-        "todayButtonContent"?: string;
         "value"?: Date | Date[];
     }
 }
@@ -51,7 +49,6 @@ declare global {
 }
 declare namespace LocalJSX {
     interface WcDatepicker {
-        "clearButtonContent"?: string;
         "disableDate"?: (date: Date) => boolean;
         "disabled"?: boolean;
         "elementClassName"?: string;
@@ -75,7 +72,6 @@ declare namespace LocalJSX {
         "showTodayButton"?: boolean;
         "showYearStepper"?: boolean;
         "startDate"?: string;
-        "todayButtonContent"?: string;
         "value"?: Date | Date[];
     }
     interface IntrinsicElements {

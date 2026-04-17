@@ -1021,4 +1021,84 @@ describe('wc-datepicker', () => {
     expect(jan15.getAttribute('aria-disabled')).toBe('true');
     expect(jan9.getAttribute('aria-disabled')).toBe('true');
   });
+
+  describe('slots', () => {
+    const slotHtml = {
+      nextYear: `<span slot="button-year-next">next year</span>`,
+      prevYear: `<span slot="button-year-prev">prev year</span>`,
+      nextMonth: `<span slot="button-month-next">next month</span>`,
+      prevMonth: `<span slot="button-month-prev">prev month</span>`,
+      clear: `<span slot="button-clear">clear</span>`,
+      today: `<span slot="button-today">today</span>`
+    };
+
+    it('contains slot content if given', async () => {
+      const page = await newSpecPage({
+        components: [WCDatepicker],
+        html: `<wc-datepicker show-year-stepper show-month-stepper show-clear-button show-today-button>
+  ${slotHtml.nextYear}
+  ${slotHtml.prevYear}
+  ${slotHtml.nextMonth}
+  ${slotHtml.prevMonth}
+  ${slotHtml.clear}
+  ${slotHtml.today}
+</wc-datepicker>`,
+        language: 'en'
+      });
+
+      await page.waitForChanges();
+
+      expect(
+        page.root.querySelector('.wc-datepicker__previous-year-button')
+          .innerHTML
+      ).toContain(slotHtml.prevYear);
+      expect(
+        page.root.querySelector('.wc-datepicker__previous-month-button')
+          .innerHTML
+      ).toContain(slotHtml.prevMonth);
+      expect(
+        page.root.querySelector('.wc-datepicker__next-year-button').innerHTML
+      ).toContain(slotHtml.nextYear);
+      expect(
+        page.root.querySelector('.wc-datepicker__next-month-button').innerHTML
+      ).toContain(slotHtml.nextMonth);
+      expect(
+        page.root.querySelector('.wc-datepicker__today-button').innerHTML
+      ).toContain(slotHtml.today);
+      expect(
+        page.root.querySelector('.wc-datepicker__clear-button').innerHTML
+      ).toContain(slotHtml.clear);
+    });
+
+    it('not contains slot content if not given', async () => {
+      const page = await newSpecPage({
+        components: [WCDatepicker],
+        html: `<wc-datepicker show-year-stepper show-month-stepper show-clear-button show-today-button></wc-datepicker>`,
+        language: 'en'
+      });
+
+      await page.waitForChanges();
+
+      expect(
+        page.root.querySelector('.wc-datepicker__previous-year-button')
+          .innerHTML
+      ).not.toContain(slotHtml.prevYear);
+      expect(
+        page.root.querySelector('.wc-datepicker__previous-month-button')
+          .innerHTML
+      ).not.toContain(slotHtml.prevMonth);
+      expect(
+        page.root.querySelector('.wc-datepicker__next-year-button').innerHTML
+      ).not.toContain(slotHtml.nextYear);
+      expect(
+        page.root.querySelector('.wc-datepicker__next-month-button').innerHTML
+      ).not.toContain(slotHtml.nextMonth);
+      expect(
+        page.root.querySelector('.wc-datepicker__today-button').innerHTML
+      ).not.toContain(slotHtml.today);
+      expect(
+        page.root.querySelector('.wc-datepicker__clear-button').innerHTML
+      ).not.toContain(slotHtml.clear);
+    });
+  });
 });
