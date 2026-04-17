@@ -80,10 +80,6 @@ export interface MonthChangedEventDetails {
 export class WCDatepicker {
   @Element() el: HTMLElement;
 
-  /**
-   * @deprecated - use named slot `button-clear` instead
-   */
-  @Prop() clearButtonContent?: string;
   @Prop() disabled?: boolean = false;
   @Prop() disableDate?: (date: Date) => boolean = () => false;
   @Prop() elementClassName?: string = 'wc-datepicker';
@@ -105,10 +101,6 @@ export class WCDatepicker {
   @Prop() showTodayButton?: boolean = false;
   @Prop() showYearStepper?: boolean = false;
   @Prop() startDate?: string = getISODateString(new Date());
-  /**
-   * @deprecated - use named slot `button-today` instead
-   */
-  @Prop() todayButtonContent?: string;
   @Prop({ mutable: true }) value?: Date | Date[];
 
   @State() currentDate: Date;
@@ -371,7 +363,7 @@ export class WCDatepicker {
       | 'previousYear'
       | 'nextYear'
   ) => {
-    let potentialDate;
+    let potentialDate: Date;
     let outOfRange = false;
 
     switch (direction) {
@@ -763,7 +755,6 @@ export class WCDatepicker {
                     <polyline points="18 17 13 12 18 7"></polyline>
                   </svg>
                 </slot>
-
               </button>
             )}
             {this.showMonthStepper && (
@@ -853,7 +844,6 @@ export class WCDatepicker {
                     <polyline points="9 18 15 12 9 6"></polyline>
                   </svg>
                 </slot>
-
               </button>
             )}
             {this.showYearStepper && (
@@ -879,7 +869,6 @@ export class WCDatepicker {
                     <polyline points="13 17 18 12 13 7"></polyline>
                     <polyline points="6 17 11 12 6 7"></polyline>
                   </svg>
-
                 </slot>
               </button>
             )}
@@ -1026,7 +1015,6 @@ export class WCDatepicker {
                 <button
                   class={this.getClassName('today-button')}
                   disabled={this.disabled}
-                  innerHTML={this.todayButtonContent || undefined}
                   onClick={this.showToday}
                   type="button"
                 >
@@ -1037,7 +1025,6 @@ export class WCDatepicker {
                 <button
                   class={this.getClassName('clear-button')}
                   disabled={this.disabled}
-                  innerHTML={this.clearButtonContent || undefined}
                   onClick={this.clear}
                   type="button"
                 >
