@@ -19,6 +19,7 @@ export namespace Components {
         "maxDate"?: string;
         "maxSearchDays"?: number;
         "minDate"?: string;
+        "navigateWeeks"?: boolean;
         "nextMonthButtonContent"?: string;
         "nextYearButtonContent"?: string;
         "previousMonthButtonContent"?: string;
@@ -61,6 +62,7 @@ declare namespace LocalJSX {
         "maxDate"?: string;
         "maxSearchDays"?: number;
         "minDate"?: string;
+        "navigateWeeks"?: boolean;
         "nextMonthButtonContent"?: string;
         "nextYearButtonContent"?: string;
         "onChangeMonth"?: (event: WcDatepickerCustomEvent<MonthChangedEventDetails>) => void;

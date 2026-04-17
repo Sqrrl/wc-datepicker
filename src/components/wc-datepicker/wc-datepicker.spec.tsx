@@ -252,6 +252,34 @@ describe('wc-datepicker', () => {
     ).toBe('1');
   });
 
+  it('highlights current date with keyboard selection in navigate-weeks mode', async () => {
+    const page = await newSpecPage({
+      components: [WCDatepicker],
+      html: `<wc-datepicker navigate-weeks></wc-datepicker>`,
+      language: 'en'
+    });
+
+    page.root.startDate = new Date('2026-04-08');
+
+    await page.waitForChanges();
+
+    triggerKeyDown(page, 'End');
+    await page.waitForChanges();
+
+    expect(
+      page.root.querySelector('.wc-datepicker__date--current').children[0]
+        .innerHTML
+    ).toBe('11');
+
+    triggerKeyDown(page, 'Home');
+    await page.waitForChanges();
+
+    expect(
+      page.root.querySelector('.wc-datepicker__date--current').children[0]
+        .innerHTML
+    ).toBe('5');
+  });
+
   it('resets value after range prop is changed', async () => {
     const page = await newSpecPage({
       components: [WCDatepicker],
