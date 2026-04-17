@@ -535,9 +535,12 @@ defineCustomElements();</code></pre>
                 <code>true</code>, focus is shifted to the first or last day of
                 the <em>week</em>. When it is set to <code>false</code>, focus
                 is shifted to the first or last day of the <em>month</em>.<br />
-                Setting this to <code>true</code> adheres to the <a
-                href="https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/examples/datepicker-dialog/"
-                target="_blank">APG's Date Picker Dialog Example</a>.
+                Setting this to <code>true</code> adheres to the
+                <a
+                  href="https://www.w3.org/WAI/ARIA/apg/patterns/dialog-modal/examples/datepicker-dialog/"
+                  target="_blank"
+                  >APG's Date Picker Dialog Example</a
+                >.
               </td>
             </tr>
           </tbody>
@@ -561,13 +564,16 @@ defineCustomElements();</code></pre>
       <section>
         <h2 id="slots">Slots</h2>
 
-        <p>Slots can be used to customize the appearance of some parts, that
-          you typically want to theme; e.g. you can include custom icons or use
-          complex HTML.</p>
+        <p>
+          Slots replace the default content for individual controls—useful for
+          custom icons, richer markup, or theme-specific styling.
+        </p>
 
-        <p><strong>Note:</strong> If you just want to change the labels of some
-          of those buttons, have a look at the
-          <a href="#labels"><code>labels</code> option</a>.</p>
+        <p>
+          <strong>Note:</strong> To change the visible text on controls without
+          replacing their markup, use the
+          <a href="#labels"><code>labels</code> option</a> instead of slots.
+        </p>
 
         <strong>Example:</strong>
 
@@ -590,27 +596,31 @@ defineCustomElements();</code></pre>
           <tbody>
             <tr>
               <td><code>button-today</code></td>
-              <td>Changes the content of the optional today button.</td>
+              <td>Changes the content of the optional "today" button.</td>
             </tr>
             <tr>
               <td><code>button-clear</code></td>
-              <td>Changes the content of the optional clear button.</td>
+              <td>Changes the content of the optional "clear" button.</td>
             </tr>
             <tr>
               <td><code>button-year-next</code></td>
-              <td>Changes the content of the optional next year button.</td>
+              <td>Changes the content of the optional "next year" button.</td>
             </tr>
             <tr>
               <td><code>button-year-prev</code></td>
-              <td>Changes the content of the optional previous year button.</td>
+              <td>
+                Changes the content of the optional "previous year" button.
+              </td>
             </tr>
             <tr>
               <td><code>button-month-next</code></td>
-              <td>Changes the content of the optional next month button.</td>
+              <td>Changes the content of the optional "next month" button.</td>
             </tr>
             <tr>
               <td><code>button-month-prev</code></td>
-              <td>Changes the content of the optional previous month button.</td>
+              <td>
+                Changes the content of the optional "previous month" button.
+              </td>
             </tr>
           </tbody>
         </table>
@@ -894,16 +904,20 @@ defineCustomElements();</code></pre>
               <td>
                 <kbd>Home</kbd>
               </td>
-              <td>Move cursor to first day of the month or week, see <a
-                href="#navigate-weeks"><code>navigate-weeks</code></a>.
+              <td>
+                Move cursor to first day of the month or week, see
+                <a href="#navigate-weeks"><code>navigate-weeks</code></a
+                >.
               </td>
             </tr>
             <tr>
               <td>
                 <kbd>End</kbd>
               </td>
-              <td>Move cursor to last day of the month or week, see <a
-                href="#navigate-weeks"><code>navigate-weeks</code></a>.
+              <td>
+                Move cursor to last day of the month or week, see
+                <a href="#navigate-weeks"><code>navigate-weeks</code></a
+                >.
               </td>
             </tr>
           </tbody>
