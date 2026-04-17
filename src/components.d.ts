@@ -8,6 +8,9 @@ import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
 import { MonthChangedEventDetails, WCDatepickerLabels } from "./components/wc-datepicker/wc-datepicker";
 export namespace Components {
     interface WcDatepicker {
+        /**
+          * @deprecated - use named slot `button-clear` instead
+         */
         "clearButtonContent"?: string;
         "disableDate"?: (date: Date) => boolean;
         "disabled"?: boolean;
@@ -30,6 +33,9 @@ export namespace Components {
         "showTodayButton"?: boolean;
         "showYearStepper"?: boolean;
         "startDate"?: string;
+        /**
+          * @deprecated - use named slot `button-today` instead
+         */
         "todayButtonContent"?: string;
         "value"?: Date | Date[];
     }
@@ -51,6 +57,9 @@ declare global {
 }
 declare namespace LocalJSX {
     interface WcDatepicker {
+        /**
+          * @deprecated - use named slot `button-clear` instead
+         */
         "clearButtonContent"?: string;
         "disableDate"?: (date: Date) => boolean;
         "disabled"?: boolean;
@@ -75,6 +84,9 @@ declare namespace LocalJSX {
         "showTodayButton"?: boolean;
         "showYearStepper"?: boolean;
         "startDate"?: string;
+        /**
+          * @deprecated - use named slot `button-today` instead
+         */
         "todayButtonContent"?: string;
         "value"?: Date | Date[];
     }

@@ -43,6 +43,7 @@
         <li><a href="#install">Install</a></li>
         <li><a href="#usage">Usage</a></li>
         <li><a href="#options">Options</a></li>
+        <li><a href="#slots">Slots</a></li>
         <li><a href="#events">Events</a></li>
         <li><a href="#styling">Styling</a></li>
         <li><a href="#browser-support">Browser support</a></li>
@@ -441,7 +442,7 @@ defineCustomElements();</code></pre>
               <td><code>false</code></td>
               <td>Enable/disable range selection.</td>
             </tr>
-            <tr>
+            <tr id="labels">
               <td><code>labels</code></td>
               <td><code>WCDatepickerLabels</code></td>
               <td>See below.</td>
@@ -555,6 +556,64 @@ defineCustomElements();</code></pre>
   todayButton: 'Show today',
   yearSelect: 'Select year'
 }</code></pre>
+      </section>
+
+      <section>
+        <h2 id="slots">Slots</h2>
+
+        <p>Slots can be used to customize the appearance of some parts, that
+          you typically want to theme; e.g. you can include custom icons or use
+          complex HTML.</p>
+
+        <p><strong>Note:</strong> If you just want to change the labels of some
+          of those buttons, have a look at the
+          <a href="#labels"><code>labels</code> option</a>.</p>
+
+        <strong>Example:</strong>
+
+        <pre><code class="language-html">&lt;wc-datepicker show-clear-button show-today-button show-month-stepper show-year-stepper&gt;
+  &lt;span slot="button-today" class="icon-today"&gt;&lt;/span&gt;
+  &lt;span slot="button-clear" class="icon-clear"&gt;&lt;/span&gt;
+  &lt;span slot="button-month-next" class="icon-arrow-left"&gt;&lt;/span&gt;
+  &lt;span slot="button-year-next" class="icon-arrow-left-double"&gt;&lt;/span&gt;
+  &lt;span slot="button-month-prev" class="icon-arrow-right"&gt;&lt;/span&gt;
+  &lt;span slot="button-year-prev" class="icon-arrow-right-double"&gt;&lt;/span&gt;
+&lt;/wc-datepicker&gt;</code></pre>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>button-today</code></td>
+              <td>Changes the content of the optional today button.</td>
+            </tr>
+            <tr>
+              <td><code>button-clear</code></td>
+              <td>Changes the content of the optional clear button.</td>
+            </tr>
+            <tr>
+              <td><code>button-year-next</code></td>
+              <td>Changes the content of the optional next year button.</td>
+            </tr>
+            <tr>
+              <td><code>button-year-prev</code></td>
+              <td>Changes the content of the optional previous year button.</td>
+            </tr>
+            <tr>
+              <td><code>button-month-next</code></td>
+              <td>Changes the content of the optional next month button.</td>
+            </tr>
+            <tr>
+              <td><code>button-month-prev</code></td>
+              <td>Changes the content of the optional previous month button.</td>
+            </tr>
+          </tbody>
+        </table>
       </section>
 
       <section>
