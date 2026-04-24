@@ -58,7 +58,7 @@
 
         <ul>
           <li>
-            <strong>🦶 Small footprint:</strong> About 8 KB minified and
+            <strong>🦶 Small footprint:</strong> About 10 KB minified and
             gzipped.
           </li>
           <li>
@@ -86,8 +86,8 @@
             tests.
           </li>
           <li>
-            <strong>📆 Range selection:</strong> Allows to select single dates
-            or ranges.
+            <strong>📆 Selection modes:</strong> Single date, a continuous
+            range, or multiple non-consecutive dates.
           </li>
         </ul>
       </section>
@@ -157,16 +157,19 @@
                 </tr>
                 <tr>
                   <td>
-                    <code id="range-label">range</code><br />
-                    <small>Enable range input</small>
+                    <code id="selection-mode-label">selection-mode</code><br />
+                    <small>Choose the selection mode</small>
                   </td>
                   <td>
-                    <input
-                      aria-labelledby="range-label"
-                      id="range"
-                      type="checkbox"
-                      value="range"
-                    />
+                    <select
+                      aria-labelledby="selection-mode-label"
+                      id="selection-mode"
+                      name="selection-mode"
+                    >
+                      <option value="single" selected>single</option>
+                      <option value="range">range</option>
+                      <option value="multiple">multiple</option>
+                    </select>
                   </td>
                 </tr>
                 <tr>
@@ -440,7 +443,39 @@ defineCustomElements();</code></pre>
               <td><code>range</code></td>
               <td><code>boolean</code></td>
               <td><code>false</code></td>
-              <td>Enable/disable range selection.</td>
+              <td>
+                <strong>Deprecated.</strong> Use
+                <a href="#selection-mode"><code>selection-mode</code></a>
+                instead. When <code>true</code>, enables range selection
+                (equivalent to <code>selection-mode="range"</code>). Ignored
+                when <code>selection-mode</code> is set.
+              </td>
+            </tr>
+            <tr id="selection-mode">
+              <td><code>selection-mode</code></td>
+              <td><code>'single' | 'range' | 'multiple'</code></td>
+              <td><code>'single'</code></td>
+              <td>
+                Controls how dates are selected.
+                <ul>
+                  <li>
+                    <code>'single'</code> — exactly one date can be selected.
+                  </li>
+                  <li>
+                    <code>'range'</code> — two clicks define a start and end
+                    date (inclusive). The value is emitted as an array of two
+                    ISO strings.
+                  </li>
+                  <li>
+                    <code>'multiple'</code> — any number of non-consecutive
+                    dates can be toggled on/off. The value is emitted as an
+                    array of ISO strings sorted in ascending order.
+                  </li>
+                </ul>
+                Takes precedence over the deprecated
+                <code>range</code> prop. Changing the mode at runtime resets the
+                current selection.
+              </td>
             </tr>
             <tr id="labels">
               <td><code>labels</code></td>
@@ -510,8 +545,11 @@ defineCustomElements();</code></pre>
               <td><code>Date | Date[] | undefined</code></td>
               <td></td>
               <td>
-                The currently selected date. Array of start and end date if
-                range selection is enabled.
+                The currently selected date(s). A single <code>Date</code> when
+                <code>selection-mode="single"</code>, an array of start and end
+                date when <code>selection-mode="range"</code>, or an array of
+                all selected dates (sorted ascending) when
+                <code>selection-mode="multiple"</code>.
               </td>
             </tr>
             <tr>
@@ -550,6 +588,9 @@ defineCustomElements();</code></pre>
 
         <pre><code class="language-javascript">{
   clearButton: 'Clear value',
+  dateDeselected: 'deselected',
+  dateSelected: 'selected',
+  datesSelected: '{count} dates selected',
   monthSelect: 'Select month',
   nextMonthButton: 'Next month',
   nextYearButton: 'Next year',
@@ -559,6 +600,14 @@ defineCustomElements();</code></pre>
   todayButton: 'Show today',
   yearSelect: 'Select year'
 }</code></pre>
+
+        <p>
+          <code>dateSelected</code>, <code>dateDeselected</code> and
+          <code>datesSelected</code> are announced by screen readers when
+          <code>selection-mode="multiple"</code>. In <code>datesSelected</code>,
+          the <code>{count}</code> placeholder is replaced with the current
+          number of selected dates.
+        </p>
       </section>
 
       <section>
@@ -854,7 +903,11 @@ defineCustomElements();</code></pre>
             </tr>
             <tr>
               <td><kbd>Space</kbd>, <kbd>Enter</kbd></td>
-              <td>Select current day.</td>
+              <td>
+                Select current day. In
+                <code>selection-mode="multiple"</code>, toggles the day's
+                selection on or off.
+              </td>
             </tr>
             <tr>
               <td>
@@ -946,7 +999,7 @@ defineCustomElements();</code></pre>
       const disabledInput = document.getElementById('disabled');
       const firstDayOfWeekInput = document.getElementById('first-day-of-week');
       const localeInput = document.getElementById('locale');
-      const rangeInput = document.getElementById('range');
+      const selectionModeInput = document.getElementById('selection-mode');
       const showClearButtonInput = document.getElementById('show-clear-button');
       const showMonthStepperInput =
         document.getElementById('show-month-stepper');
@@ -1042,8 +1095,13 @@ defineCustomElements();</code></pre>
         updateDemoCode();
       });
 
-      rangeInput.addEventListener('change', (event) => {
-        datepicker.setAttribute('range', String(event.target.checked));
+      selectionModeInput.addEventListener('change', (event) => {
+        if (event.target.value && event.target.value !== 'single') {
+          datepicker.setAttribute('selection-mode', event.target.value);
+        } else {
+          datepicker.removeAttribute('selection-mode');
+        }
+
         updateDemoCode();
       });
 

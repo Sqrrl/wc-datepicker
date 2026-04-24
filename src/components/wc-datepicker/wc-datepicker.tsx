@@ -33,8 +33,13 @@ import {
   subDays
 } from '../../utils/utils';
 
+export type WCDatepickerSelectionMode = 'single' | 'range' | 'multiple';
+
 export type WCDatepickerLabels = {
   clearButton: string;
+  dateDeselected: string;
+  dateSelected: string;
+  datesSelected: string;
   monthSelect: string;
   nextMonthButton: string;
   nextYearButton: string;
@@ -47,6 +52,9 @@ export type WCDatepickerLabels = {
 
 const defaultLabels: WCDatepickerLabels = {
   clearButton: 'Clear value',
+  dateDeselected: 'deselected',
+  dateSelected: 'selected',
+  datesSelected: '{count} dates selected',
   monthSelect: 'Select month',
   nextMonthButton: 'Next month',
   nextYearButton: 'Next year',
@@ -85,7 +93,9 @@ export class WCDatepicker {
   @Prop() elementClassName?: string = 'wc-datepicker';
   @Prop() firstDayOfWeek?: number = 0;
   @Prop() goToRangeStartOnSelect?: boolean = true;
+  /** @deprecated Use `selectionMode="range"` instead. */
   @Prop() range?: boolean;
+  @Prop() selectionMode?: WCDatepickerSelectionMode;
   @Prop() labels?: WCDatepickerLabels = defaultLabels;
   @Prop() locale?: string = navigator?.language || 'en-US';
   @Prop() maxDate?: string;
@@ -105,6 +115,7 @@ export class WCDatepicker {
 
   @State() currentDate: Date;
   @State() hoveredDate: Date;
+  @State() lastToggle?: { action: 'deselected' | 'selected'; date: Date };
   @State() weekdays: string[][];
 
   @Event() selectDate: EventEmitter<string | string[] | undefined>;
@@ -134,6 +145,14 @@ export class WCDatepicker {
   @Watch('range')
   watchRange() {
     this.value = undefined;
+    this.lastToggle = undefined;
+    this.selectDate.emit(undefined);
+  }
+
+  @Watch('selectionMode')
+  watchSelectionMode() {
+    this.value = undefined;
+    this.lastToggle = undefined;
     this.selectDate.emit(undefined);
   }
 
@@ -150,9 +169,15 @@ export class WCDatepicker {
       return;
     }
 
+    if (Array.isArray(this.value) && this.value.length === 0) {
+      return;
+    }
+
     if (Array.isArray(this.value)) {
       this.currentDate =
-        this.value.length > 1 && !this.goToRangeStartOnSelect
+        this.mode === 'multiple'
+          ? this.value[this.value.length - 1]
+          : this.value.length > 1 && !this.goToRangeStartOnSelect
           ? this.value[1]
           : this.value[0];
     } else if (this.value instanceof Date) {
@@ -236,7 +261,7 @@ export class WCDatepicker {
       return;
     }
 
-    if (this.isRangeValue(this.value)) {
+    if (this.mode === 'range' && Array.isArray(this.value)) {
       const startDate = Intl.DateTimeFormat(this.locale, {
         day: 'numeric',
         month: 'long',
@@ -255,12 +280,43 @@ export class WCDatepicker {
       } else {
         return startDate;
       }
-    } else {
+    } else if (this.mode === 'single' && this.value instanceof Date) {
       return Intl.DateTimeFormat(this.locale, {
         day: 'numeric',
         month: 'long',
         year: 'numeric'
       }).format(this.value);
+    }
+  }
+
+  private getLiveRegionText() {
+    if (this.mode === 'multiple') {
+      if (this.lastToggle) {
+        const formatted = Intl.DateTimeFormat(this.locale, {
+          day: 'numeric',
+          month: 'long',
+          year: 'numeric'
+        }).format(this.lastToggle.date);
+        const action =
+          this.lastToggle.action === 'selected'
+            ? this.labels.dateSelected
+            : this.labels.dateDeselected;
+        const count = Array.isArray(this.value) ? this.value.length : 0;
+        const countText = this.labels.datesSelected.replace(
+          /\{count\}/g,
+          String(count)
+        );
+
+        return `${formatted} ${action}. ${countText}`;
+      }
+
+      const n = Array.isArray(this.value) ? this.value.length : 0;
+
+      if (n > 0) {
+        return this.labels.datesSelected.replace(/\{count\}/g, String(n));
+      }
+    } else {
+      return this.getTitle();
     }
   }
 
@@ -315,11 +371,12 @@ export class WCDatepicker {
       return;
     }
 
-    if (this.isRangeValue(this.value)) {
+    if (this.mode === 'range') {
+      const prior = Array.isArray(this.value) ? this.value : [];
       const newValue =
-        this.value?.[0] === undefined || this.value.length === 2
+        prior[0] === undefined || prior.length === 2
           ? [date]
-          : [this.value[0], date];
+          : [prior[0], date];
 
       if (newValue.length === 2 && newValue[0] > newValue[1]) {
         newValue.reverse();
@@ -332,19 +389,33 @@ export class WCDatepicker {
 
       this.value = newValue;
       this.selectDate.emit(isoValue);
+    } else if (this.mode === 'multiple') {
+      const iso = getISODateString(date);
+      const current: Date[] = Array.isArray(this.value) ? [...this.value] : [];
+      const at = current.findIndex((d) => getISODateString(d) === iso);
+
+      if (at >= 0) {
+        current.splice(at, 1);
+        this.lastToggle = { action: 'deselected', date };
+      } else {
+        current.push(date);
+        this.lastToggle = { action: 'selected', date };
+      }
+
+      current.sort((a, b) => a.getTime() - b.getTime());
+      this.value = current;
+      this.selectDate.emit(current.map((d) => getISODateString(d)));
     } else {
-      if (this.value?.getTime() === date.getTime()) {
+      if (
+        this.value instanceof Date &&
+        this.value?.getTime() === date.getTime()
+      ) {
         return;
       }
 
       this.value = date;
       this.selectDate.emit(getISODateString(date));
     }
-  }
-
-  // @ts-ignore
-  private isRangeValue(value: Date | Date[]): value is Date[] {
-    return this.range;
   }
 
   private getAvailableDate = (
@@ -480,6 +551,7 @@ export class WCDatepicker {
 
   private clear = () => {
     this.value = undefined;
+    this.lastToggle = undefined;
     this.selectDate.emit(undefined);
   };
 
@@ -696,6 +768,14 @@ export class WCDatepicker {
     return getFirstOfMonth(nextMonth) > max;
   }
 
+  private get mode(): WCDatepickerSelectionMode {
+    if (this.selectionMode !== undefined) {
+      return this.selectionMode;
+    }
+
+    return this.range ? 'range' : 'single';
+  }
+
   private isDateDisabled(date: Date): boolean {
     if (this.disableDate(date)) {
       return true;
@@ -715,6 +795,10 @@ export class WCDatepicker {
 
   render() {
     const showFooter = this.showTodayButton || this.showClearButton;
+    const selectedSet =
+      this.mode === 'multiple' && Array.isArray(this.value)
+        ? new Set(this.value.map((d) => getISODateString(d)))
+        : null;
 
     return (
       <Host>
@@ -729,7 +813,7 @@ export class WCDatepicker {
         >
           <div class={this.getClassName('header')}>
             <span aria-atomic="true" aria-live="polite" class="visually-hidden">
-              {this.getTitle()}
+              {this.getLiveRegionText()}
             </span>
             {this.showYearStepper && (
               <button
@@ -880,7 +964,11 @@ export class WCDatepicker {
               onKeyDown={this.onKeyDown}
               role="grid"
               aria-label={this.getGridTitle()}
-              aria-multiselectable={this.range ? 'true' : 'false'}
+              aria-multiselectable={
+                this.mode === 'range' || this.mode === 'multiple'
+                  ? 'true'
+                  : 'false'
+              }
             >
               <thead class={this.getClassName('calendar-header')}>
                 <tr class={this.getClassName('weekday-row')}>
@@ -910,33 +998,40 @@ export class WCDatepicker {
                         const isOverflowing =
                           day.getMonth() !== this.currentDate.getMonth();
 
-                        const isSelected = Array.isArray(this.value)
-                          ? isSameDay(day, this.value[0]) ||
-                            isSameDay(day, this.value[1])
+                        const isSelected = selectedSet
+                          ? selectedSet.has(getISODateString(day))
+                          : Array.isArray(this.value)
+                          ? this.mode === 'range' &&
+                            (isSameDay(day, this.value[0]) ||
+                              isSameDay(day, this.value[1]))
                           : isSameDay(day, this.value);
 
-                        const isInRange = !this.isRangeValue
-                          ? false
-                          : isDateInRange(day, {
-                              from: this.value?.[0],
-                              to:
-                                this.value?.[1] ||
-                                this.hoveredDate ||
-                                this.currentDate
-                            });
+                        const isInRange =
+                          this.mode === 'range'
+                            ? isDateInRange(day, {
+                                from: this.value?.[0],
+                                to:
+                                  this.value?.[1] ||
+                                  this.hoveredDate ||
+                                  this.currentDate
+                              })
+                            : false;
 
-                        const orderedValues = Boolean(this.value?.[0])
-                          ? [
-                              this.value?.[0],
-                              this.value?.[1] || this.hoveredDate
-                            ].sort((a, b) => a - b)
-                          : [];
+                        const orderedValues =
+                          this.mode === 'range' && Boolean(this.value?.[0])
+                            ? [
+                                this.value?.[0],
+                                this.value?.[1] || this.hoveredDate
+                              ].sort((a, b) => a - b)
+                            : [];
 
                         const isStart =
-                          this.range && isSameDay(orderedValues[0], day);
+                          this.mode === 'range' &&
+                          isSameDay(orderedValues[0], day);
 
                         const isEnd =
-                          this.range && isSameDay(orderedValues[1], day);
+                          this.mode === 'range' &&
+                          isSameDay(orderedValues[1], day);
 
                         const isToday = isSameDay(day, new Date());
 
