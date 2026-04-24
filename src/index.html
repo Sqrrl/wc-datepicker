@@ -16,13 +16,31 @@
   </head>
   <body>
     <main>
-      <wc-datepicker id="datepicker"></wc-datepicker>
-      <wc-datepicker range></wc-datepicker>
-      <wc-datepicker disabled></wc-datepicker>
-      <wc-datepicker
-        min-date="2026-04-05"
-        max-date="2026-05-06"
-      ></wc-datepicker>
+      <h1>Datepicker</h1>
+
+      <section>
+        <h2>Single selection</h2>
+        <wc-datepicker id="datepicker"></wc-datepicker>
+      </section>
+      <section>
+        <h2>Range selection</h2>
+        <wc-datepicker selection-mode="range"></wc-datepicker>
+      </section>
+      <section>
+        <h2>Multiple selection</h2>
+        <wc-datepicker selection-mode="multiple"></wc-datepicker>
+      </section>
+      <section>
+        <h2>Disabled</h2>
+        <wc-datepicker disabled></wc-datepicker>
+      </section>
+      <section>
+        <h2>Min and max date</h2>
+        <wc-datepicker
+          min-date="2026-04-05"
+          max-date="2026-05-06"
+        ></wc-datepicker>
+      </section>
     </main>
 
     <script>

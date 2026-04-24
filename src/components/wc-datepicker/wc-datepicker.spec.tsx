@@ -1022,6 +1022,203 @@ describe('wc-datepicker', () => {
     expect(jan9.getAttribute('aria-disabled')).toBe('true');
   });
 
+  describe('multi selection', () => {
+    it('emits sorted ISO strings for non-consecutive dates', async () => {
+      const page = await newSpecPage({
+        components: [WCDatepicker],
+        html: `<wc-datepicker selection-mode="multiple" start-date="2022-01-01"></wc-datepicker>`,
+        language: 'en'
+      });
+
+      const spy = jest.fn();
+
+      page.root.addEventListener('selectDate', spy);
+      await page.waitForChanges();
+
+      const jan3 = Array.from(
+        page.root.querySelectorAll<HTMLTableCellElement>('.wc-datepicker__date')
+      ).find((el) => el.dataset.date === '2022-01-03');
+      const jan10 = Array.from(
+        page.root.querySelectorAll<HTMLTableCellElement>('.wc-datepicker__date')
+      ).find((el) => el.dataset.date === '2022-01-10');
+      const jan1 = Array.from(
+        page.root.querySelectorAll<HTMLTableCellElement>('.wc-datepicker__date')
+      ).find((el) => el.dataset.date === '2022-01-01');
+
+      jan3.click();
+      expect(spy.mock.calls[0][0].detail).toEqual(['2022-01-03']);
+
+      jan10.click();
+      expect(spy.mock.calls[1][0].detail).toEqual(['2022-01-03', '2022-01-10']);
+
+      jan1.click();
+      expect(spy.mock.calls[2][0].detail).toEqual([
+        '2022-01-01',
+        '2022-01-03',
+        '2022-01-10'
+      ]);
+    });
+
+    it('deselects when clicking a selected date and emits remaining dates sorted', async () => {
+      const page = await newSpecPage({
+        components: [WCDatepicker],
+        html: `<wc-datepicker selection-mode="multiple" start-date="2022-01-01"></wc-datepicker>`,
+        language: 'en'
+      });
+
+      const spy = jest.fn();
+
+      page.root.addEventListener('selectDate', spy);
+      await page.waitForChanges();
+
+      const jan5 = Array.from(
+        page.root.querySelectorAll<HTMLTableCellElement>('.wc-datepicker__date')
+      ).find((el) => el.dataset.date === '2022-01-05');
+      const jan12 = Array.from(
+        page.root.querySelectorAll<HTMLTableCellElement>('.wc-datepicker__date')
+      ).find((el) => el.dataset.date === '2022-01-12');
+
+      jan12.click();
+      jan5.click();
+      expect(spy.mock.calls[1][0].detail).toEqual(['2022-01-05', '2022-01-12']);
+
+      jan5.click();
+      expect(spy.mock.calls[2][0].detail).toEqual(['2022-01-12']);
+    });
+
+    it('toggles selection with Space/Enter in multiple mode', async () => {
+      const page = await newSpecPage({
+        components: [WCDatepicker],
+        html: `<wc-datepicker selection-mode="multiple" start-date="2022-01-01"></wc-datepicker>`,
+        language: 'en'
+      });
+
+      const spy = jest.fn();
+
+      page.root.addEventListener('selectDate', spy);
+      await page.waitForChanges();
+
+      page.root
+        .querySelector<HTMLTableCellElement>('.wc-datepicker__date')
+        .click();
+      expect(spy.mock.calls[0][0].detail).toEqual(['2021-12-26']);
+
+      triggerKeyDown(page, 'ArrowRight');
+      triggerKeyDown(page, 'Space');
+      expect(spy.mock.calls[1][0].detail).toEqual(['2021-12-26', '2021-12-27']);
+
+      triggerKeyDown(page, 'Enter');
+      expect(spy.mock.calls[2][0].detail).toEqual(['2021-12-26']);
+    });
+
+    it('sets aria-multiselectable and aria-selected in multiple mode', async () => {
+      const page = await newSpecPage({
+        components: [WCDatepicker],
+        html: `<wc-datepicker selection-mode="multiple" start-date="2022-01-01"></wc-datepicker>`,
+        language: 'en'
+      });
+
+      await page.waitForChanges();
+
+      const calendar = page.root.querySelector('.wc-datepicker__calendar');
+      expect(calendar.getAttribute('aria-multiselectable')).toBe('true');
+
+      const jan4 = Array.from(
+        page.root.querySelectorAll<HTMLTableCellElement>('.wc-datepicker__date')
+      ).find((el) => el.dataset.date === '2022-01-04');
+
+      jan4.click();
+      await page.waitForChanges();
+
+      const jan4After = Array.from(
+        page.root.querySelectorAll<HTMLTableCellElement>('.wc-datepicker__date')
+      ).find((el) => el.dataset.date === '2022-01-04');
+
+      expect(jan4After.getAttribute('aria-selected')).toBe('true');
+    });
+
+    it('resets value when selectionMode changes', async () => {
+      const page = await newSpecPage({
+        components: [WCDatepicker],
+        html: `<wc-datepicker selection-mode="multiple" start-date="2022-01-01"></wc-datepicker>`,
+        language: 'en'
+      });
+
+      const spy = jest.fn();
+
+      page.root.addEventListener('selectDate', spy);
+      await page.waitForChanges();
+
+      page.root
+        .querySelector<HTMLTableCellElement>('.wc-datepicker__date')
+        .click();
+
+      expect(spy).toHaveBeenCalled();
+
+      page.root.selectionMode = 'single';
+      await page.waitForChanges();
+
+      expect(page.root.value).toBeUndefined();
+      expect(
+        spy.mock.calls[spy.mock.calls.length - 1][0].detail
+      ).toBeUndefined();
+    });
+
+    it('does not apply range-only date classes in multiple mode', async () => {
+      const page = await newSpecPage({
+        components: [WCDatepicker],
+        html: `<wc-datepicker selection-mode="multiple" start-date="2022-01-01"></wc-datepicker>`,
+        language: 'en'
+      });
+
+      await page.waitForChanges();
+
+      const jan3 = Array.from(
+        page.root.querySelectorAll<HTMLTableCellElement>('.wc-datepicker__date')
+      ).find((el) => el.dataset.date === '2022-01-03');
+      const jan10 = Array.from(
+        page.root.querySelectorAll<HTMLTableCellElement>('.wc-datepicker__date')
+      ).find((el) => el.dataset.date === '2022-01-10');
+
+      jan3.click();
+      jan10.click();
+      await page.waitForChanges();
+
+      const jan5 = Array.from(
+        page.root.querySelectorAll<HTMLTableCellElement>('.wc-datepicker__date')
+      ).find((el) => el.dataset.date === '2022-01-05');
+
+      expect(jan5.classList.contains('wc-datepicker__date--in-range')).toBe(
+        false
+      );
+      expect(jan5.classList.contains('wc-datepicker__date--start')).toBe(false);
+      expect(jan5.classList.contains('wc-datepicker__date--end')).toBe(false);
+    });
+
+    it('selectionMode="range" matches two-click range selection', async () => {
+      const page = await newSpecPage({
+        components: [WCDatepicker],
+        html: `<wc-datepicker selection-mode="range" start-date="2022-01-01"></wc-datepicker>`,
+        language: 'en'
+      });
+
+      const spy = jest.fn();
+
+      page.root.addEventListener('selectDate', spy);
+      await page.waitForChanges();
+
+      page.root
+        .querySelector<HTMLTableCellElement>('.wc-datepicker__date')
+        .click();
+
+      triggerKeyDown(page, 'ArrowRight');
+      triggerKeyDown(page, 'Space');
+
+      expect(spy.mock.calls[0][0].detail).toEqual(['2021-12-26']);
+      expect(spy.mock.calls[1][0].detail).toEqual(['2021-12-26', '2021-12-27']);
+    });
+  });
+
   describe('slots', () => {
     const slotHtml = {
       nextYear: `<span slot="button-year-next">next year</span>`,
