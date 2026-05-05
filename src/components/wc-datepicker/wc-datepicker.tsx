@@ -520,7 +520,7 @@ export class WCDatepicker {
       clampedDay
     );
 
-    this.updateCurrentDate(updatedDate);
+    this.updateCurrentDate(this.clampDateToRange(updatedDate));
   };
 
   private onYearSelect = (event: Event) => {
@@ -538,6 +538,20 @@ export class WCDatepicker {
       input.value = String(year);
     }
 
+    const min = this.getMinDate();
+    const max = this.getMaxDate();
+    const minYear = min?.getFullYear();
+    const maxYear = max?.getFullYear();
+    const yearLower = minYear ?? 0;
+    const yearUpper = maxYear ?? 9999;
+    const clampedYear = Math.max(yearLower, Math.min(yearUpper, year));
+
+    if (clampedYear !== year) {
+      input.value = String(clampedYear);
+    }
+
+    year = clampedYear;
+
     const currentDay = this.currentDate.getDate();
     const currentMonth = this.currentDate.getMonth();
     const targetDate = new Date();
@@ -550,7 +564,7 @@ export class WCDatepicker {
 
     updatedDate.setFullYear(year, currentMonth, clampedDay);
 
-    this.updateCurrentDate(updatedDate);
+    this.updateCurrentDate(this.clampDateToRange(updatedDate));
   };
 
   private onKeyDown = (event: KeyboardEvent) => {
@@ -696,6 +710,55 @@ export class WCDatepicker {
     return getFirstOfMonth(nextMonth) > max;
   }
 
+  private getMinDate(): Date | undefined {
+    if (!this.minDate) {
+      return undefined;
+    }
+
+    return removeTimezoneOffset(new Date(this.minDate));
+  }
+
+  private getMaxDate(): Date | undefined {
+    if (!this.maxDate) {
+      return undefined;
+    }
+
+    return removeTimezoneOffset(new Date(this.maxDate));
+  }
+
+  private isMonthOutOfRange(year: number, monthIndex: number): boolean {
+    const monthStart = new Date(year, monthIndex, 1);
+    const firstOfMonth = getFirstOfMonth(monthStart);
+    const lastOfMonth = getLastOfMonth(monthStart);
+    const min = this.getMinDate();
+    const max = this.getMaxDate();
+
+    if (min && lastOfMonth < min) {
+      return true;
+    }
+
+    if (max && firstOfMonth > max) {
+      return true;
+    }
+
+    return false;
+  }
+
+  private clampDateToRange(date: Date): Date {
+    const min = this.getMinDate();
+    const max = this.getMaxDate();
+
+    if (min && date < min) {
+      return min;
+    }
+
+    if (max && date > max) {
+      return max;
+    }
+
+    return date;
+  }
+
   private isDateDisabled(date: Date): boolean {
     if (this.disableDate(date)) {
       return true;
@@ -797,6 +860,10 @@ export class WCDatepicker {
                 {getMonths(this.locale).map((month, index) => (
                   <option
                     key={month}
+                    disabled={this.isMonthOutOfRange(
+                      this.currentDate.getFullYear(),
+                      index
+                    )}
                     selected={this.currentDate.getMonth() === index}
                     value={index + 1}
                   >
@@ -809,9 +876,9 @@ export class WCDatepicker {
                 aria-label={this.labels.yearSelect}
                 class={this.getClassName('year-select')}
                 disabled={this.disabled}
-                max={9999}
+                max={this.getMaxDate()?.getFullYear() ?? 9999}
                 maxLength={4}
-                min={1}
+                min={this.getMinDate()?.getFullYear() ?? 1}
                 onChange={this.onYearSelect}
                 type="number"
                 value={this.currentDate.getFullYear()}
