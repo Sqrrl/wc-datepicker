@@ -1,5 +1,11 @@
 # wc-datepicker
 
+## 0.12.0
+
+### Minor Changes
+
+- [#75](https://github.com/Sqrrl/wc-datepicker/pull/75) [`eea4f33`](https://github.com/Sqrrl/wc-datepicker/commit/eea4f33acf47b457e3d3d2254962d42a89ec0cf6) Thanks [@Sqrrl](https://github.com/Sqrrl)! - Disable the year stepper and month options according to the min-date and max-date attributes
+
 ## 0.11.0
 
 ### Minor Changes
