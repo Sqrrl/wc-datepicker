@@ -19,7 +19,7 @@
 
 ## Features
 
-- 🦶 Small footprint: About 8 KB minified and gzipped.
+- 🦶 Small footprint: About 10 KB minified and gzipped.
 - 🪁 Dependency-free: No external dependencies.
 - 🖼 Framework-agnostic: Standard Web Component that works with any framework.
 - 💪 Strongly typed: Written in TypeScript.
@@ -27,7 +27,7 @@
 - 🇪🇺 Localizable: Customizable labels and date formats.
 - 🌈 Customizable: Semantic markup with no built-in styles.
 - 🧪 Well tested: Quality assured by means of unit tests.
-- 📆 Range selection: Allows to select single dates or ranges.
+- 📆 Selection modes: Single date, a continuous range, or multiple non-consecutive dates.
 
 ## Documentation & Demo
 

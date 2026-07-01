@@ -5,7 +5,7 @@
  * It contains typing information for all components that exist in this project.
  */
 import { HTMLStencilElement, JSXBase } from "@stencil/core/internal";
-import { MonthChangedEventDetails, WCDatepickerLabels } from "./components/wc-datepicker/wc-datepicker";
+import { MonthChangedEventDetails, WCDatepickerLabels, WCDatepickerSelectionMode } from "./components/wc-datepicker/wc-datepicker";
 export namespace Components {
     interface WcDatepicker {
         "disableDate"?: (date: Date) => boolean;
@@ -23,7 +23,11 @@ export namespace Components {
         "nextYearButtonContent"?: string;
         "previousMonthButtonContent"?: string;
         "previousYearButtonContent"?: string;
+        /**
+          * @deprecated Use `selectionMode="range"` instead.
+         */
         "range"?: boolean;
+        "selectionMode"?: WCDatepickerSelectionMode;
         "showClearButton"?: boolean;
         "showMonthStepper"?: boolean;
         "showTodayButton"?: boolean;
@@ -66,7 +70,11 @@ declare namespace LocalJSX {
         "onSelectDate"?: (event: WcDatepickerCustomEvent<string | string[] | undefined>) => void;
         "previousMonthButtonContent"?: string;
         "previousYearButtonContent"?: string;
+        /**
+          * @deprecated Use `selectionMode="range"` instead.
+         */
         "range"?: boolean;
+        "selectionMode"?: WCDatepickerSelectionMode;
         "showClearButton"?: boolean;
         "showMonthStepper"?: boolean;
         "showTodayButton"?: boolean;
