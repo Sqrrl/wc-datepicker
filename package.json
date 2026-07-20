@@ -41,7 +41,7 @@
     }
   },
   "dependencies": {
-    "@stencil/core": "^2.13.0"
+    "@stencil/core": "^4.43.5"
   },
   "devDependencies": {
     "@changesets/changelog-github": "^0.4.7",
